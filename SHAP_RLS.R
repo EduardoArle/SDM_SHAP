@@ -213,7 +213,7 @@ for(i in 1:length(species_occ))
 setwd(wd_res_species)
 species_list <- list.files()
 
-for(i in 26:length(species_list))
+for(i in 236:length(species_list))
 {
   setwd(wd_res_species)
   sps <- read.csv(species_list[i])
@@ -393,9 +393,70 @@ for(i in 26:length(species_list))
 }
 
 
+# Plot results
+
+setwd(wd_results_analysis)
+res <- lapply(list.files(), read.csv)
+
+# all results in one table
+
+all_res <- rbindlist(res)
+
+boxplot(distRange ~ shap_climatic, data = res[[i]])
+boxplot(distanceLand ~ shap_climatic, data = res[[i]])
+
+#
 
 #box plot results
-boxplot(distRange ~ sps_sp$shap_climatic, data = sps_sp@data)
+boxplot(distRange ~ shap_climatic, data = all_res)
+boxplot(distanceLand ~ shap_climatic, data = all_res)
+
+
+plot(world, border = NA,  col = 'grey80')
+plot(sps_ranges, add = T)
+plot(sps_sp_pr, add = T, pch = 19, cex = 0.8, col = 'orange')
+
+
+##### CLIM vs NON CLIM
+
+sps_sp_pr$col <- 'orange'
+sps_sp_pr$col[grep('Temperature', sps_sp_pr$shap_var)] <- 'blue'
+plot(world, border = NA,  col = 'grey80')
+plot(sps_sp_pr, add = T, col = sps_sp_pr$col, pch = 19)
+plot(sps_ranges, add = T)
+
+points(-175, -55, pch = 19, cex = 2, col = 'blue')
+text(-170, -55, 'Climatic', pos = 4, cex = 2)
+points(-175, -65, pch = 19, cex = 2, col = 'orange')
+text(-170, -65, 'Non climatic', pos = 4, cex = 2)
+
+boxplot(distRange ~ shap_climatic, data = res[[i]])
+boxplot(distanceLand ~ shap_climatic, data = res[[i]])
+
+
+##### ONLY CLIM
+
+sps_sp_pr$col <- NA
+sps_sp_pr$col[which(sps_sp_pr$shap_var_temp == "Present.Surface.Temperature.Min")] <- 'blue'
+sps_sp_pr$col[which(sps_sp_pr$shap_var_temp == "Present.Surface.Temperature.Mean")] <- 'orange'
+sps_sp_pr$col[which(sps_sp_pr$shap_var_temp == "Present.Surface.Temperature.Max")] <- 'red'
+    
+plot(world, border = NA,  col = 'grey80')
+plot(sps_sp_pr, add = T, col = sps_sp_pr$col, pch = 19)
+plot(sps_ranges, add = T)
+    
+points(-175, -45, pch = 19, cex = 2, col = 'blue')
+text(-170, -45, 'SST min', pos = 4, cex = 2)
+points(-175, -55, pch = 19, cex = 2, col = 'orange')
+text(-170, -55, 'SST mean', pos = 4, cex = 2)
+points(-175, -65, pch = 19, cex = 2, col = 'red')
+text(-170, -65, 'SST max', pos = 4, cex = 2)
+
+res[[i]]$shap_var_temp <- gsub("Present.Surface.Temperature", "SST", x = res[[i]]$shap_var_temp)
+
+
+boxplot(distRange ~ shap_var_temp, data = res[[i]])
+boxplot(distanceLand ~ shap_var_temp, data = res[[i]])
 
 
 
