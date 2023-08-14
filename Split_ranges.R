@@ -16,5 +16,3 @@ for(i in 1:length(sps_list))
            dsn = wd_out)
   print(i)
 }
-
-?st_write
