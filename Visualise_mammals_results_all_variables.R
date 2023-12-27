@@ -3,14 +3,13 @@ library(sf); library(rworldmap); library(raster)
 
 #list wds
 wd_ranges <- "/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Range_maps"
-wd_res_species <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Species'
-wd_maps <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Maps'
+wd_res_species <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/All_variables'
+wd_maps <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Maps_all_variables'
 
 
 #make a list of species for which I have results
 setwd(wd_res_species)
-sps_list <- gsub("_m\\w+", "", list.files())
-sps_list <- unique(gsub(".csv", "", sps_list))
+sps_list <- gsub("_.csv", "", list.files())
 
 #get a world map from package rworldmap
 world <- getMap(resolution = 'low')
@@ -27,11 +26,7 @@ for(i in 1:length(sps_list))
   
   #SHAP results for the species
   setwd(wd_res_species)
-  sps <- lapply(list.files(pattern = sps_list[i]), read.csv)
-  
-  names(sps) <- gsub('.csv', '', 
-                  gsub('_', '', 
-                    gsub(sps_list[i], '', list.files(pattern = sps_list[i]))))
+  sps <- read.csv(paste0(sps_list[i], '_.csv'))
   
   #species range map
   setwd(wd_ranges)
@@ -68,88 +63,41 @@ for(i in 1:length(sps_list))
   #reconvert the cropped region to WGS84
   region <- st_transform(region, crs = crs(range))
   
-  #create a colour ramp palhette
-  colramp <- colorRampPalette(c("red", "blue"))
-  
-  #MIN values
-  sps_sp_min <- st_as_sf(sps$mins, crs = crs(range),
+  #create a spatial object with the occurrences
+  sps_sp <- st_as_sf(sps, crs = crs(range),
                      coords = c('decimalLongitude', 'decimalLatitude'))
   
-  ### create a measure of contribution of variable ###
+  ### create a measure of contribution of variables for T and PPT ###
   
-  #sum absolute values of both variables
-  total_contr <- abs(sps_sp_min$MIN_temp_SHAP) + abs(sps_sp_min$MIN_prec_SHAP)
+  #sum absolute SHAP values of MIN, MEAN, and MAX
+  total_contr_T <- abs(sps_sp$MIN_temp_SHAP) + 
+                   abs(sps_sp$MEAN_temp_SHAP) +
+                   abs(sps_sp$MAX_temp_SHAP)
   
-  #get percentage value of contribution
-  sps_sp_min$MIN_temp_Perc <- abs(sps_sp_min$MIN_temp_SHAP) / total_contr * 100
-  sps_sp_min$MIN_prec_Perc <- abs(sps_sp_min$MIN_prec_SHAP) / total_contr * 100
-  
-  #create a column with the colours representing variable contribution
-  sps_sp_min$colour <- rgb(sps_sp_min$MIN_temp_Perc, 0, sps_sp_min$MIN_prec_Perc, 
-           maxColorValue = 100)
-  
-  #select only presences
-  sps_sp_min_pr <- sps_sp_min[which(sps_sp_min$Occurrence == 1),]
-  
-  
-  #MEAN values
-  sps_sp_mean <- st_as_sf(sps$means, crs = crs(range),
-                     coords = c('decimalLongitude', 'decimalLatitude'))
-  
-  ### create a measure of contribution of variable ###
-  
-  #sum absolute values of both variables
-  total_contr <- abs(sps_sp_mean$MEAN_temp_SHAP) + abs(sps_sp_mean$MEAN_prec_SHAP)
+  total_contr_PPT <- abs(sps_sp$MIN_prec_SHAP) + 
+                     abs(sps_sp$MEAN_prec_SHAP) +
+                     abs(sps_sp$MAX_prec_SHAP)
   
   #get percentage value of contribution
-  sps_sp_mean$MEAN_temp_Perc <- abs(sps_sp_mean$MEAN_temp_SHAP) / total_contr * 100
-  sps_sp_mean$MEAN_prec_Perc <- abs(sps_sp_mean$MEAN_prec_SHAP) / total_contr * 100
+  sps_sp$MIN_T_Perc <- abs(sps_sp$MIN_temp_SHAP) / total_contr_T * 100
+  sps_sp$MEAN_T_Perc <- abs(sps_sp$MEAN_temp_SHAP) / total_contr_T * 100
+  sps_sp$MAX_T_Perc <- abs(sps_sp$MAX_temp_SHAP) / total_contr_T * 100
   
-  #create a column with the colours representing variable contribution
-  sps_sp_mean$colour <- rgb(sps_sp_mean$MEAN_temp_Perc,
-                            0,
-                            sps_sp_mean$MEAN_prec_Perc, 
-                            maxColorValue = 100)
+  sps_sp$MIN_PPT_Perc <- abs(sps_sp$MIN_prec_SHAP) / total_contr_PPT * 100
+  sps_sp$MEAN_PPT_Perc <- abs(sps_sp$MEAN_prec_SHAP) / total_contr_PPT * 100
+  sps_sp$MAX_PPT_Perc <- abs(sps_sp$MAX_prec_SHAP) / total_contr_PPT * 100
   
-  #select only presences
-  sps_sp_mean_pr <- sps_sp_mean[which(sps_sp_mean$Occurrence == 1),]
-  
-  
-  #MAX values
-  sps_sp_max <- st_as_sf(sps$maxs, crs = crs(range),
-                          coords = c('decimalLongitude', 'decimalLatitude'))
-  
-  ### create a measure of contribution of variable ###
-  
-  #sum absolute values of both variables
-  total_contr <- abs(sps_sp_max$MAX_temp_SHAP) + abs(sps_sp_max$MAX_prec_SHAP)
-  
-  #get percentage value of contribution
-  sps_sp_max$MAX_temp_Perc <- abs(sps_sp_max$MAX_temp_SHAP) / total_contr * 100
-  sps_sp_max$MAX_prec_Perc <- abs(sps_sp_max$MAX_prec_SHAP) / total_contr * 100
-  
-  #create a column with the colours representing variable contribution
-  sps_sp_max$colour <- rgb(sps_sp_max$MAX_temp_Perc,
-                            0,
-                            sps_sp_max$MAX_prec_Perc, 
-                            maxColorValue = 100)
-  
-  #select only presences
-  sps_sp_max_pr <- sps_sp_max[which(sps_sp_max$Occurrence == 1),]
-  
-  #install function "myGradientLegend" in script modified_function_gradientLegend
-  
-  ### save image
+  #save images of the maps
   setwd(wd_maps)
   
   pdf(file=paste0(sps_list[i],"_var_contribution.pdf"))
   
-  par(mfrow = c(1,3))
+  par(mfrow = c(1,1))
   
   #plot layers
   plot(st_geometry(region), col = 'khaki', main = 'Min')
   plot(st_geometry(range), add = T, col = '#238b4590')
-  plot(st_geometry(sps_sp_min_pr), add = T, col = sps_sp_min$colour, pch = 19)
+  plot(st_geometry(sps_sp_pr), add = T, pch = 19)
   
   #make legend
   myGradientLegend(valRange = c(0, 100),
