@@ -2,7 +2,8 @@
 library(sf); library(rworldmap)
 
 #list wds
-wd_ranges <- "/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals"
+wd_ranges <- "/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Range_maps"
+wd_lists <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Species_lists'
 
 #list species
 setwd(wd_ranges)
@@ -12,7 +13,10 @@ sps_list <- gsub('.shp', '', list.files(pattern = '.shp'))
 world <- getMap()
 
 #visualise species distributions and choose the ones that are continuous and do not border the oceans (manually)
-i = 5000
+
+i = 1219
+
+i=98
 
 range <- st_read(dsn = wd_ranges, layer = sps_list[i])
 
@@ -20,10 +24,15 @@ plot(st_geometry(range), add = F, col = 'red')
 plot(world, border = NA, col = 'darkgreen')
 plot(st_geometry(range), add = T, col = 'orange', border = NA)
 
-#list species that may be interesting to look at
-c()
+sps_list[i]
 
-interesting_sps <- c(3, 8, 13, 14, 33, 38, 41, 43, 44, 45, 59, 68, 69, 70, 71,
+1192, 1194, 1197, 1202, 1204, 1218, 1219, 1220, 1221, 1232, 
+
+
+#list species that may be interesting to look at
+c(, )
+
+interesting_sps <- c(3, 8, 13, 14, 38, 41, 43, 44, 45, 59, 68, 69, 70, 71,
                      72, 83, 85, 87, 89, 91, 92, 93, 98, 100, 102, 107, 108, 112,
                      113, 114, 123, 129, 130, 132, 138, 144, 147, 148, 152, 155,
                      156, 159, 166, 167, 168, 180, 186, 187, 188, 195, 225, 228,
@@ -31,7 +40,7 @@ interesting_sps <- c(3, 8, 13, 14, 33, 38, 41, 43, 44, 45, 59, 68, 69, 70, 71,
                      332, 337, 338, 339, 395, 401, 409, 412, 420, 460, 465, 466,
                      475, 480, 487, 499, 502, 504, 506, 507, 510, 513, 515, 516,
                      517, 518, 519, 520, 521, 531, 542, 555, 558, 565, 568, 576,
-                     577, 579, 580, 589, 590, 592, 597, 641, 604, 605, 656, 658,
+                     577, 579, 580, 589, 590, 592, 597, 601, 604, 605, 656, 658,
                      659, 660, 662, 669, 692, 699, 713, 729, 731, 732, 733, 737,
                      739, 749, 757, 761, 765, 766, 778, 811, 819, 827, 848, 850,
                      870, 881, 882, 911, 934, 939, 950, 965, 970, 974, 1018,
@@ -83,7 +92,29 @@ interesting_sps <- c(3, 8, 13, 14, 33, 38, 41, 43, 44, 45, 59, 68, 69, 70, 71,
                      4778, 4779, 4780, 4782, 4787, 4788, 4792, 4795, 4797, 4803, 
                      4813, 4819, 4821, 4833, 4840, 4844, 4847, 4849, 4850, 4851, 
                      4853, 4854, 4859, 4860, 4861, 4877, 4895, 4901, 4905, 4919,
-                     4933, 4951, 4969, 4970, 4974, 4977, 4980, 4988, )
+                     4933, 4951, 4969, 4970, 4974, 4977, 4980, 4988, 5001, 5002, 
+                     5007, 5008, 5016, 5029, 5030, 5040, 5050, 5058, 5067, 5068, 
+                     5084, 5089, 5095, 5112, 5116, 5124, 5142, 5193, 5196, 5199, 
+                     5211, 5292, 5295, 5296, 5298, 5304, 5307, 5308, 5319, 5320, 
+                     5321, 5322, 5323, 5324, 5325, 5326, 5327, 5328, 5329, 5330, 
+                     5331, 5333, 5335, 5337, 5339, 5340, 5343, 5344, 5345, 5347, 
+                     5348, 5349, 5350, 5351, 5352, 5354, 5355, 5356, 5361, 5371,
+                     5373, 5375, 5376, 5379, 5380, 5382, 5383, 5385, 5386, 5403, 
+                     5404, 5410, 5431, 5499, 5502, 5504, 5505, 5508, 5511, 5514, 
+                     5518, 5536, 5585, 5600, 5616, 5617, 5620)
 
 
-14h14
+## list some chosen species (for now)
+
+sel_sps_indices <- c(13, 69, 85, 87, 92, 93, 98, 107, 108, 112, 113, 147, 167,
+                     180, 195, 228, 233, 237, 248, 326, 337, 338, 339, 409, 487, 
+                     504, 506, 513, 515, 516, 518, 519, 520, 590, 605, 656, 713,
+                     870, 881, 950, 965, 970, 974, 1175, 1176, 1179, 1202, 1204,
+                     1218, 1219)
+
+sel_species <- c('Abrothrix andinus', 'Aethomys nyikae', 'Akodon dayi', 'Akodon fumeus', 'Akodon lutescens', 'Akodon mimus', 'Akodon orophilus', 'Akodon simulator', 'Akodon spegazzinii', 'Akodon toba', 'Akodon torques', 'Alouatta caraya', 'Alticola semicanus', 'Ammospermophilus interpres', 'Anoura aequatoris', 'Aotus lemurinus', 'Aotus vociferans', 'Apodemus alpicola', 'Apodemus pallipes', 'Ateles chamek', 'Auliscomys boliviensis', 'Auliscomys pictus', 'Auliscomys sublimis', 'Blarina hylophaga', 'Callithrix penicillata', 'Callospermophilus madrensis', 'Calomys boliviae', 'Calomys lepidus', 'Calomys sorellus', 'Calomys tener', 'Calomys venustus', 'Calomyscus bailwardi', 'Calomyscus baluchi', 'Cebuella pygmaea', 'Cebus versicolor', 'Cercopithecus wolfi', 'Chalinolobus picatus', 'Cratogeomys goldmani', 'Cricetulus longicaudatus', 'Crocidura hildegardeae', 'Crocidura latona', 'Crocidura littoralis', 'Crocidura luna', 'Ctenomys maulinus', 'Ctenomys mendocinus', 'Ctenomys opimus', 'Ctenomys yolandae', 'Cuniculus taczanowskii', 'Cynomys gunnisoni', 'Cynomys leucurus')
+
+
+#save list of selected species
+setwd(wd_lists)
+saveRDS(sel_species, 'Selected_mammal_species')

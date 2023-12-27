@@ -7,7 +7,7 @@ library(xgboost);library(caret)
 wd_ranges <- "/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Range_maps"
 wd_variables <- '/Users/carloseduardoaribeiro/Documents/CNA/Data/Variables/wc2-5'
 wd_thinned_occ <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Thinned_occurrrences'
-wd_res_species <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Species'
+wd_res_species <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/All_variables'
 
 #list species 
 setwd(wd_thinned_occ)
@@ -112,10 +112,10 @@ for(i in 1:length(sps_list))
                          coords = c('decimalLongitude', 'decimalLatitude'),
                          crs = crs(sps_range2))
   
-  ###### SHAP MEANS #####
-  
   #select variables we will use
-  preds <- stack(AnnualMeanTemperature, AnnualPrecipitation)
+  preds <- stack(AnnualMeanTemperature, AnnualPrecipitation, #means
+                 MinTemperatureOfColdestMonth, PrecipitationOfDriestMonth, #mins
+                 MaxTemperatureOfWarmestMonth, PrecipitationOfWettestMonth) #maxs
   
   #extract values from each location from all variables and make a table
   vals_pts <- extract(preds, species_sp)
@@ -127,7 +127,7 @@ for(i in 1:length(sps_list))
   #########
   
   # Fit XGBoost model
-  pred_vars <- c('bio1','bio12')
+  pred_vars <- c('bio1', 'bio12', 'bio6', 'bio14', 'bio5', 'bio13')
 
   shap <- xgb.DMatrix(data.matrix(tab_occ_vars[pred_vars]), label = tab_occ_vars$Occurrence)
   
@@ -143,105 +143,8 @@ for(i in 1:length(sps_list))
   # get the SHAP values for each variable in each prediction 
   MEAN_temp_SHAP <- character()
   MEAN_prec_SHAP <- character()
-  
-  for(j in 1:nrow(tab_occ_vars))
-  {
-    obj <- sv_waterfall(shp, row_id = j) +
-      theme(axis.text = element_text(size = 11))
-    
-    MEAN_temp_SHAP[j] <- obj$data$S[row.names(obj$data) == 'bio1']
-    MEAN_prec_SHAP[j] <- obj$data$S[row.names(obj$data) == 'bio12']
-    
-    print(j)
-  }
-  
-  tab_occ_vars$MEAN_temp_SHAP <- MEAN_temp_SHAP
-  tab_occ_vars$MEAN_prec_SHAP <- MEAN_prec_SHAP
-
-  #save results per species
-  setwd(wd_res_species)
-  write.csv(tab_occ_vars, paste0(sps,'_means.csv'), row.names = F)
-  
-  ###### SHAP MINS #####
-  
-  #select variables we will use
-  preds <- stack(MinTemperatureOfColdestMonth, PrecipitationOfDriestMonth)
-  
-  #extract values from each location from all variables and make a table
-  vals_pts <- extract(preds, species_sp)
-  tab_occ_vars <- cbind(species, vals_pts)
-  
-  #########
-  #check variable correlation in the locations of occurrence and PAs
-  #and save info somewhere (table?)
-  #########
-  
-  # Fit XGBoost model
-  pred_vars <- c('bio6','bio14')
-  
-  shap <- xgb.DMatrix(data.matrix(tab_occ_vars[pred_vars]), label = tab_occ_vars$Occurrence)
-  
-  fit <- xgb.train(
-    params = list(learning_rate = 0.1, objective = "reg:squarederror"), 
-    data = shap,
-    nrounds = 65L
-  )
-  
-  # We also pass feature data X with originally encoded values
-  shp <- shapviz(fit, X_pred = data.matrix(tab_occ_vars[pred_vars]), X = tab_occ_vars)
-  
-  # get the SHAP values for each variable in each prediction 
   MIN_temp_SHAP <- character()
   MIN_prec_SHAP <- character()
-  
-  for(j in 1:nrow(tab_occ_vars))
-  {
-    obj <- sv_waterfall(shp, row_id = j) +
-      theme(axis.text = element_text(size = 11))
-    
-    MIN_temp_SHAP[j] <- obj$data$S[row.names(obj$data) == 'bio6']
-    MIN_prec_SHAP[j] <- obj$data$S[row.names(obj$data) == 'bio14']
-    
-    print(j)
-  }
-  
-  tab_occ_vars$MIN_temp_SHAP <- MIN_temp_SHAP
-  tab_occ_vars$MIN_prec_SHAP <- MIN_prec_SHAP
-  
-  #save results per species
-  setwd(wd_res_species)
-  write.csv(tab_occ_vars, paste0(sps,'_mins.csv'), row.names = F)
-  
-  
-  ###### SHAP MAXS #####
-  
-  #select variables we will use
-  preds <- stack(MaxTemperatureOfWarmestMonth, PrecipitationOfWettestMonth)
-  
-  #extract values from each location from all variables and make a table
-  vals_pts <- extract(preds, species_sp)
-  tab_occ_vars <- cbind(species, vals_pts)
-  
-  #########
-  #check variable correlation in the locations of occurrence and PAs
-  #and save info somewhere (table?)
-  #########
-  
-  # Fit XGBoost model
-  pred_vars <- c('bio5','bio13')
-  
-  shap <- xgb.DMatrix(data.matrix(tab_occ_vars[pred_vars]), label = tab_occ_vars$Occurrence)
-  
-  fit <- xgb.train(
-    params = list(learning_rate = 0.1, objective = "reg:squarederror"), 
-    data = shap,
-    nrounds = 65L
-  )
-  
-  # We also pass feature data X with originally encoded values
-  shp <- shapviz(fit, X_pred = data.matrix(tab_occ_vars[pred_vars]), X = tab_occ_vars)
-  
-  # get the SHAP values for each variable in each prediction 
   MAX_temp_SHAP <- character()
   MAX_prec_SHAP <- character()
   
@@ -250,18 +153,26 @@ for(i in 1:length(sps_list))
     obj <- sv_waterfall(shp, row_id = j) +
       theme(axis.text = element_text(size = 11))
     
+    MEAN_temp_SHAP[j] <- obj$data$S[row.names(obj$data) == 'bio1']
+    MEAN_prec_SHAP[j] <- obj$data$S[row.names(obj$data) == 'bio12']
+    MIN_temp_SHAP[j] <- obj$data$S[row.names(obj$data) == 'bio6']
+    MIN_prec_SHAP[j] <- obj$data$S[row.names(obj$data) == 'bio14']
     MAX_temp_SHAP[j] <- obj$data$S[row.names(obj$data) == 'bio5']
     MAX_prec_SHAP[j] <- obj$data$S[row.names(obj$data) == 'bio13']
     
     print(j)
   }
   
+  tab_occ_vars$MEAN_temp_SHAP <- MEAN_temp_SHAP
+  tab_occ_vars$MEAN_prec_SHAP <- MEAN_prec_SHAP
+  tab_occ_vars$MIN_temp_SHAP <- MIN_temp_SHAP
+  tab_occ_vars$MIN_prec_SHAP <- MIN_prec_SHAP
   tab_occ_vars$MAX_temp_SHAP <- MAX_temp_SHAP
   tab_occ_vars$MAX_prec_SHAP <- MAX_prec_SHAP
-  
+
   #save results per species
   setwd(wd_res_species)
-  write.csv(tab_occ_vars, paste0(sps,'_maxs.csv'), row.names = F)
+  write.csv(tab_occ_vars, paste0(sps,'_.csv'), row.names = F)
 }
 
 
