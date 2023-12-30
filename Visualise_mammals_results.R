@@ -75,7 +75,7 @@ for(i in 1:length(sps_list))
   sps_sp_min <- st_as_sf(sps$mins, crs = crs(range),
                      coords = c('decimalLongitude', 'decimalLatitude'))
   
-  ### create a measure of contribution of variable ###
+  ### calculate variable contribution for each prediction ###
   
   #sum absolute values of both variables
   total_contr <- abs(sps_sp_min$MIN_temp_SHAP) + abs(sps_sp_min$MIN_prec_SHAP)

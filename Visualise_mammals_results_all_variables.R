@@ -87,59 +87,55 @@ for(i in 1:length(sps_list))
   sps_sp$MEAN_PPT_Perc <- abs(sps_sp$MEAN_prec_SHAP) / total_contr_PPT * 100
   sps_sp$MAX_PPT_Perc <- abs(sps_sp$MAX_prec_SHAP) / total_contr_PPT * 100
   
+  #select only presences
+  sps_sp_pr <- sps_sp[which(sps_sp$Occurrence == 1),]
+  
   #save images of the maps
   setwd(wd_maps)
   
   pdf(file=paste0(sps_list[i],"_var_contribution.pdf"))
   
-  par(mfrow = c(1,1))
+  par(mfrow = c(2,3), mar = c(0,0,1,0))
   
-  #plot layers
-  plot(st_geometry(region), col = 'khaki', main = 'Min')
+  #plot MIN T
+  plot(st_geometry(region), col = 'khaki', main = 'Min T')
   plot(st_geometry(range), add = T, col = '#238b4590')
-  plot(st_geometry(sps_sp_pr), add = T, pch = 19)
+  plot(st_geometry(sps_sp_pr), add = T, pch = 21, 
+       col = 'black', bg = 'red', cex = (sps_sp_pr$MIN_T_Perc / 50) + 0.1)
   
-  #make legend
-  myGradientLegend(valRange = c(0, 100),
-                   pos=c(0.3,0,0.7,.015),
-                   color = colramp(100),
-                   side = 1,
-                   n.seg = 0,
-                   values = c("Temp","Prec"),
-                   cex = 1)
-  
-  
-  #plot layers
-  plot(st_geometry(region), col = 'khaki', main = 'Mean')
+  #plot MEAN T
+  plot(st_geometry(region), col = 'khaki', main = 'Mean T')
   plot(st_geometry(range), add = T, col = '#238b4590')
-  plot(st_geometry(sps_sp_mean_pr), add = T, col = sps_sp_mean$colour, pch = 19)
+  plot(st_geometry(sps_sp_pr), add = T, pch = 21, 
+       col = 'black', bg = 'red', cex = (sps_sp_pr$MEAN_T_Perc / 50) + 0.1)
   
-  #make legend
-  myGradientLegend(valRange = c(0, 100),
-                   pos=c(0.3,0,0.7,.015),
-                   color = colramp(100),
-                   side = 1,
-                   n.seg = 0,
-                   values = c("Temp","Prec"),
-                   cex = 1)
-  
-  
-  #plot layers
-  plot(st_geometry(region), col = 'khaki', main = 'Max')
+  #plot MAX T
+  plot(st_geometry(region), col = 'khaki', main = 'Max T')
   plot(st_geometry(range), add = T, col = '#238b4590')
-  plot(st_geometry(sps_sp_max_pr), add = T, col = sps_sp_max$colour, pch = 19)
+  plot(st_geometry(sps_sp_pr), add = T, pch = 21, 
+       col = 'black', bg = 'red', cex = (sps_sp_pr$MAX_T_Perc / 50) + 0.1)
   
-  #make legend
-  myGradientLegend(valRange = c(0, 100),
-                   pos=c(0.3,0,0.7,.015),
-                   color = colramp(100),
-                   side = 1,
-                   n.seg = 0,
-                   values = c("Temp","Prec"),
-                   cex = 1)
+  
+  #plot MIN PPT
+  plot(st_geometry(region), col = 'khaki', main = 'Min PPT')
+  plot(st_geometry(range), add = T, col = '#238b4590')
+  plot(st_geometry(sps_sp_pr), add = T, pch = 21, 
+       col = 'black', bg = 'blue', cex = (sps_sp_pr$MIN_PPT_Perc / 50) + 0.1)
+  
+  #plot MEAN PPT
+  plot(st_geometry(region), col = 'khaki', main = 'Mean PPT')
+  plot(st_geometry(range), add = T, col = '#238b4590')
+  plot(st_geometry(sps_sp_pr), add = T, pch = 21, 
+       col = 'black', bg = 'blue', cex = (sps_sp_pr$MEAN_PPT_Perc / 50) + 0.1)
+  
+  #plot MAX PPT
+  plot(st_geometry(region), col = 'khaki', main = 'Max PPT')
+  plot(st_geometry(range), add = T, col = '#238b4590')
+  plot(st_geometry(sps_sp_pr), add = T, pch = 21, 
+       col = 'black', bg = 'blue', cex = (sps_sp_pr$MAX_PPT_Perc / 50) + 0.1)
+
   
   dev.off()
-  
 }
   
   
