@@ -132,9 +132,11 @@ for(i in 1:length(sps_list))
          
   #save table
   setwd(wd_pts_measure)
-  write.csv(pr_sps2, paste0(sps,'point_range_metrics.csv'))
+  write.csv(pr_sps2, paste0(sps,'_point_range_metrics.csv'), row.names = F)
 }
 
+
+##################################
 plot(sps_range2)
 plot(pr_sps2_sf, add = T, pch = 19, col = 'magenta', cex = 0.4)
 plot(pr_sps2_sf[which.max(pr_sps2$centralness),], add = T, pch = 19, col = 'green')
