@@ -443,8 +443,8 @@ for(j in 1:length(sps_list_sel))
     ## Save plot precipitation variables contribution per relative polarwardness
     
     #### TEST #### change wd after
-    setwd(wd_test)
-    #setwd(wd_sps)
+    #setwd(wd_test)
+    setwd(wd_sps)
     pdf(file = paste0(gsub(' ', '_', sps_list_sel[j]),
                       '_Precipitation_RelPolar.pdf'))
     
@@ -470,7 +470,7 @@ for(j in 1:length(sps_list_sel))
     text(0.08, 1.7, round(r2,3), col = '#ff8d59', font = 2, pos = 4)
     
     #pupulate vector
-    minTR2_RP[length(minTR2_RP) + 1] <- r2
+    minPPTR2_RP[length(minPPTR2_RP) + 1] <- r2
     
     #meanPPT
     points(sps_meanPPT_SHAP_info[[j]]$relPolarwardness, cont_meanPPT, 
@@ -487,7 +487,7 @@ for(j in 1:length(sps_list_sel))
     text(0.08, 5.7, round(r2,3), col = '#8c510a', font = 2, pos = 4)
     
     #pupulate vector
-    meanTR2_RP[length(meanTR2_RP) + 1] <- r2
+    meanPPTR2_RP[length(meanPPTR2_RP) + 1] <- r2
     
     #maxPPT
     points(sps_maxPPT_SHAP_info[[j]]$relPolarwardness, cont_maxPPT, 
@@ -504,7 +504,7 @@ for(j in 1:length(sps_list_sel))
     text(0.08, 9.7, round(r2,3), col = '#1a9850', font = 2, pos = 4)
     
     #pupulate vector
-    maxTR2_RP[length(maxTR2_RP) + 1] <- r2
+    maxPPTR2_RP[length(maxPPTR2_RP) + 1] <- r2
     
     #plot species range size and roundness
     text(0.78, 97, 'Range', font = 2, cex = 0.8, pos = 4)
@@ -525,70 +525,123 @@ for(j in 1:length(sps_list_sel))
     text(0,97, sps_list_sel[j], font = 4, pos = 4)
     
     dev.off()
+    
+    
+    ## Save plot precipitation variables contribution per centralness
+    
+    #### TEST #### change wd after
+    #setwd(wd_test)
+    setwd(wd_sps)
+    pdf(file = paste0(gsub(' ', '_',
+                           sps_list_sel[j]),'_Precipitation_Centralness.pdf'))
+    
+    #set parametres for plotting
+    par(mar = c(5,5,5,5))
+    
+    #minPPT
+    plot(sps_minPPT_SHAP_info[[j]]$centralness, cont_minPPT, 
+         pch = 19, cex = 0.4, col = '#fc8d5910',
+         ylab = 'Precipitation contribution',
+         xlab = 'Centralness',
+         ylim = c(0,100),
+         xlim = c(0,1))
+    
+    #fit linear model
+    lin_mod_minPPT <- lm(cont_minPPT ~ sps_minPPT_SHAP_info[[j]]$centralness)
+    abline(lin_mod_minPPT, col = '#fc8d59', lwd = 2)
+    
+    #get R^2
+    r2 <- summary(lin_mod_minPPT)$r.squared
+    text(0, 2, expression(bold(paste('R'^2*' = '), sep='')), col = '#fc8d59',
+         pos = 4)
+    text(0.08, 1.7, round(r2,3), col = '#ff8d59', font = 2, pos = 4)
+    
+    #pupulate vector
+    minPPTR2_C[length(minPPTR2_C) + 1] <- r2
+    
+    #meanPPT
+    points(sps_meanPPT_SHAP_info[[j]]$centralness, cont_meanPPT, 
+           pch = 19, cex = 0.4, col = '#8c510a10')
+    
+    #fit linear model
+    lin_mod_meanPPT <- lm(cont_meanPPT ~ sps_meanPPT_SHAP_info[[j]]$centralness)
+    abline(lin_mod_meanPPT, col = '#8c510a', lwd = 2)
+    
+    #get R^2
+    r2 <- summary(lin_mod_meanPPT)$r.squared
+    text(0, 6, expression(bold(paste('R'^2*' = '), sep='')), col = '#8c510a',
+         pos = 4)
+    text(0.08, 5.7, round(r2,3), col = '#8c510a', font = 2, pos = 4)
+    
+    #pupulate vector
+    meanPPTR2_C[length(meanPPTR2_C) + 1] <- r2
+    
+    #maxPPT
+    points(sps_maxPPT_SHAP_info[[j]]$centralness, cont_maxPPT, 
+           pch = 19, cex = 0.4, col = '#1a985010')
+    
+    #fit linear model
+    lin_mod_maxPPT <- lm(cont_maxPPT ~ sps_maxPPT_SHAP_info[[j]]$centralness)
+    abline(lin_mod_maxPPT, col = '#1a9850', lwd = 2)
+    
+    #get R^2
+    r2 <- summary(lin_mod_maxPPT)$r.squared
+    text(0, 10, expression(bold(paste('R'^2*' = '), sep='')), col = '#1a9850',
+         pos = 4)
+    text(0.08, 9.7, round(r2,3), col = '#1a9850', font = 2, pos = 4)
+    
+    #pupulate vector
+    maxPPTR2_C[length(maxPPTR2_C) + 1] <- r2
+    
+    #plot species range size and roundness
+    text(0.78, 97, 'Range', font = 2, cex = 0.8, pos = 4)
+    text(0.78, 92, 
+         paste0('Size  ', unique(round(sps_maxPPT_SHAP_info[[j]]$rangeSize))), 
+         cex = 0.7, pos = 4)
+    text(0.78, 88, paste0('Roundness  ',
+                          unique(round(sps_maxPPT_SHAP_info[[j]]$roundness, 2))),
+         cex = 0.7, pos = 4)
+    text(0.78, 84, paste0('Max lat  ',
+                round(max(abs(sps_maxPPT_SHAP_info[[j]]$decimalLatitude)), 2)),
+         cex = 0.7, pos = 4)
+    text(0.78, 80, paste0('Min lat  ',
+                 round(min(abs(sps_minPPT_SHAP_info[[j]]$decimalLatitude)), 2)),
+         cex = 0.7, pos = 4)
+    
+    #plot species name
+    text(0,97, sps_list_sel[j], font = 4, pos = 4)
+    
+    dev.off()
+    
+    rangeSize[length(rangeSize) + 1] <- unique(sps_maxPPT_SHAP_info[[j]]$rangeSize)
+    rangeRoundness[length(rangeRoundness) + 1] <- 
+      unique(sps_maxPPT_SHAP_info[[j]]$roundness) 
+    maxLat[length(maxLat) + 1] <- max(abs(sps_maxPPT_SHAP_info[[j]]$decimalLatitude))
+    minLat[length(minLat) + 1] <- min(abs(sps_maxPPT_SHAP_info[[j]]$decimalLatitude))
+    
   }
 }
 
+#create a dataframe with the results for all species
+prec_all_pts <- data.frame(species = species, 
+                           minPPTR2_RP = minPPTR2_RP,
+                           meanPPTR2_RP = meanPPTR2_RP, 
+                           maxPPTR2_RP = maxPPTR2_RP,
+                           minPPTR2_C = minPPTR2_C,
+                           meanPPTR2_C = meanPPTR2_C, 
+                           maxPPTR2_C = maxPPTR2_C,
+                           rangeSize = rangeSize,
+                           rangeRoundness = rangeRoundness,
+                           maxLat = maxLat,
+                           minLat = minLat)
+
+#save table
+setwd(wd_tables)
+write.csv(prec_all_pts, 'Precipitation_Rel_Polar_all_points.csv', row.names = F)
 
 
 
-
-
-## Save plot image precipitation variables contribution per relative polarwardness
-setwd(wd_res)
-pdf(file = 'AllSpp_Precipitation_RelPolar.pdf')
-
-#set parametres for plotting
-par(mar = c(5,5,5,5))
-
-#minPPT
-plot(sps_minPPT_SHAP_info[[j]]$relPolarwardness, cont_minPPT, 
-     pch = 19, cex = 0.4, col = '#fc8d5910',
-     ylab = 'Contribution minPPT',
-     xlab = 'Relative Polarwardness')
-
-#fit linear model
-lin_mod_minPPT <- lm(cont_minPPT ~ sps_minPPT_SHAP_info[[j]]$relPolarwardness)
-abline(lin_mod_minPPT, col = '#fc8d59', lwd = 2)
-
-#get R^2
-r2 <- summary(lin_mod_minPPT)$r.squared
-text(0.05, 5, expression(bold(paste('R'^2*' = '), sep='')), col = '#fc8d59')
-text(0.15, 4.5, round(r2,3), col = '#fc8d59', font = 2)
-
-
-#meanPPT
-points(sps_meanPPT_SHAP_info[[j]]$relPolarwardness, cont_meanPPT, 
-       pch = 19, cex = 0.4, col = '#8c510a10')
-
-#fit linear model
-lin_mod_meanPPT <- lm(cont_meanPPT ~ sps_meanPPT_SHAP_info[[j]]$relPolarwardness)
-abline(lin_mod_meanPPT, col = '#8c510a', lwd = 2)
-
-#get R^2
-r2 <- summary(lin_mod_meanPPT)$r.squared
-text(0.05, 9, expression(bold(paste('R'^2*' = '), sep='')), col = '#8c510a')
-text(0.15, 8.5, round(r2,3), col = '#8c510a', font = 2)
-
-
-#maxPPT
-points(sps_maxPPT_SHAP_info[[j]]$relPolarwardness, cont_maxPPT, 
-       pch = 19, cex = 0.4, col = '#1a985010')
-
-#fit linear model
-lin_mod_maxPPT <- lm(cont_maxPPT ~ sps_maxPPT_SHAP_info[[j]]$relPolarwardness)
-abline(lin_mod_maxPPT, col = '#1a9850', lwd = 2)
-
-#get R^2
-r2 <- summary(lin_mod_maxPPT)$r.squared
-text(0.05, 13, expression(bold(paste('R'^2*' = '), sep='')), col = '#1a9850')
-text(0.15, 12.5, round(r2,3), col = '#1a9850', font = 2)
-
-dev.off()
-
-
-## Save plot image precipitation variables contribution per centralness
-setwd(wd_res)
-pdf(file = 'AllSpp_Precipitation_Centralness.pdf')
+################################
 
 #set parametres for plotting
 par(mar = c(5,5,5,5))
