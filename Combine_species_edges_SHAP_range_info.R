@@ -6,7 +6,7 @@
 #list wds
 wd_res_shap <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Comparison'
 wd_pts_measure <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Point_and_range_measurements'
-wd_res <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Results_analyses/Each_species_all_points'
+wd_res <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Results_analyses/Each_species_edge'
 wd_tables <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Results_analyses/Tables'
 wd_test <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Results_analyses/Test'
 
@@ -57,7 +57,6 @@ sps_minT_pr <- lapply(sps_minT, function(x){x[x$Occurrence == 1,]}) #minT
 sps_meanT_pr <- lapply(sps_meanT, function(x){x[x$Occurrence == 1,]}) #meanT
 sps_maxT_pr <- lapply(sps_maxT, function(x){x[x$Occurrence == 1,]}) #maxT
 
-
 ## Concatenate point and range info to SHAP results
 
 #minT
@@ -90,6 +89,16 @@ for(j in 1:length(sps_maxT_pr))
                                   'absPolarwardness','relPolarwardness')])
 }
 
+
+## Select only rows representing points relatively close to edges 
+## (centralness <= 0.2)
+sps_minT_SHAP_info <- lapply(sps_minT_SHAP_info,
+                             function(x){x[x$centralness <= 0.2,]}) #minT
+sps_meanT_SHAP_info <- lapply(sps_meanT_SHAP_info,
+                             function(x){x[x$centralness <= 0.2,]}) #meanT
+sps_maxT_SHAP_info <- lapply(sps_maxT_SHAP_info,
+                             function(x){x[x$centralness <= 0.2,]}) #maxT
+
 #create vectors to store the results for each species
 species <- character()
 minTR2_RP <- numeric()
@@ -107,7 +116,7 @@ minLat <- numeric()
 for(j in 1:length(sps_list_sel))
 {
   #skip sps with only one point
-  if(j != 28){
+  if(j != 11 & j!= 28){
     #list spp
     species[length(species) + 1] <- sps_list_sel[j]
     
@@ -137,9 +146,9 @@ for(j in 1:length(sps_list_sel))
     ## Save plot temperature variables contribution per relative polarwardness
     
     #### TEST #### change wd after
-    #setwd(wd_res)
+    #setwd(wd_test)
     setwd(wd_sps)
-    pdf(file = paste0(gsub(' ', '_', sps_list_sel[j]),'_Temperature_RelPolar.pdf'))
+    pdf(file = paste0(gsub(' ', '_', sps_list_sel[j]),'_Temperature_Edge_RelPolar.pdf'))
     
     #set parametres for plotting
     par(mar = c(5,5,5,5))
@@ -223,10 +232,10 @@ for(j in 1:length(sps_list_sel))
     ## Save plot temperature variables contribution per centralness
     
     #### TEST #### change wd after
-    #setwd(wd_res)
+    #setwd(wd_test)
     setwd(wd_sps)
     pdf(file = paste0(gsub(' ', '_',
-                           sps_list_sel[j]),'_Temperature_Centralness.pdf'))
+                           sps_list_sel[j]),'_Temperature_Edge_Centralness.pdf'))
     
     #set parametres for plotting
     par(mar = c(5,5,5,5))
@@ -318,7 +327,7 @@ for(j in 1:length(sps_list_sel))
 }
 
 #create a dataframe with the results for all species
-temp_all_pts <- data.frame(species = species, 
+temp_edge <- data.frame(species = species, 
                            minTR2_RP = minTR2_RP,
                            meanTR2_RP = meanTR2_RP, 
                            maxTR2_RP = maxTR2_RP,
@@ -332,7 +341,7 @@ temp_all_pts <- data.frame(species = species,
 
 #save table
 setwd(wd_tables)
-write.csv(temp_all_pts, 'Temperature_Rel_Polar_all_points.csv', row.names = F)
+write.csv(temp_edge, 'Temperature_edge_points.csv', row.names = F)
 
 
 ##############################################################################
@@ -398,6 +407,16 @@ for(j in 1:length(sps_maxPPT_pr))
 }
 
 
+## Select only rows representing points relatively close to edges 
+## (centralness <= 0.2)
+sps_minPPT_SHAP_info <- lapply(sps_minPPT_SHAP_info,
+                             function(x){x[x$centralness <= 0.2,]}) #minT
+sps_meanPPT_SHAP_info <- lapply(sps_meanPPT_SHAP_info,
+                              function(x){x[x$centralness <= 0.2,]}) #meanT
+sps_maxPPT_SHAP_info <- lapply(sps_maxPPT_SHAP_info,
+                             function(x){x[x$centralness <= 0.2,]}) #maxT
+
+
 #create vectors to store the results for each species
 species <- character()
 minPPTR2_RP <- numeric()
@@ -416,7 +435,7 @@ minLat <- numeric()
 for(j in 1:length(sps_list_sel))
 {
   #skip sps with only one point
-  if(j != 28){
+  if(j != 11 & j!= 28){
     #list spp
     species[length(species) + 1] <- sps_list_sel[j]
     
@@ -446,7 +465,7 @@ for(j in 1:length(sps_list_sel))
     #setwd(wd_test)
     setwd(wd_sps)
     pdf(file = paste0(gsub(' ', '_', sps_list_sel[j]),
-                      '_Precipitation_RelPolar.pdf'))
+                      '_Precipitation_Edge_RelPolar.pdf'))
     
     #set parametres for plotting
     par(mar = c(5,5,5,5))
@@ -533,7 +552,7 @@ for(j in 1:length(sps_list_sel))
     #setwd(wd_test)
     setwd(wd_sps)
     pdf(file = paste0(gsub(' ', '_',
-                           sps_list_sel[j]),'_Precipitation_Centralness.pdf'))
+                           sps_list_sel[j]),'_Precipitation_Edge_Centralness.pdf'))
     
     #set parametres for plotting
     par(mar = c(5,5,5,5))
@@ -623,7 +642,7 @@ for(j in 1:length(sps_list_sel))
 }
 
 #create a dataframe with the results for all species
-prec_all_pts <- data.frame(species = species, 
+prec_edge <- data.frame(species = species, 
                            minPPTR2_RP = minPPTR2_RP,
                            meanPPTR2_RP = meanPPTR2_RP, 
                            maxPPTR2_RP = maxPPTR2_RP,
@@ -637,6 +656,6 @@ prec_all_pts <- data.frame(species = species,
 
 #save table
 setwd(wd_tables)
-write.csv(prec_all_pts, 'Precipitation_Rel_Polar_all_points.csv', row.names = F)
+write.csv(prec_edge, 'Precipitation_edge_points.csv', row.names = F)
 
 
