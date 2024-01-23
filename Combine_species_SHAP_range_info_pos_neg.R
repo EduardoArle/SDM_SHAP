@@ -7,7 +7,7 @@
 wd_res_shap <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Comparison'
 wd_pts_measure <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Point_and_range_measurements'
 wd_res <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Results_analyses/Each_species_all_points_posneg'
-wd_tables <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Results_analyses/Tables'
+wd_tables <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Results_analyses/Each_species_all_points_posneg'
 
 
 #list species 
@@ -138,25 +138,31 @@ for(j in 1:length(sps_list_sel))
     #set parametres for plotting
     par(mar = c(5,5,5,5))
     
+    #get y and x lims
+    ylim <- range(c(cont_minT, cont_meanT, cont_maxT))
+    xlim <- range(sps_minT_SHAP_info[[j]]$relPolarwardness) #does not matter which I use
+    
     #minT
     plot(sps_minT_SHAP_info[[j]]$relPolarwardness, cont_minT, 
          pch = 19, cex = 0.4, col = '#0000FF15',
          ylab = 'Temperature contribution',
          xlab = 'Relative polarwardness',
-         ylim = c(0,100),
-         xlim = c(0,1))
+         ylim = c(ylim[1], ylim[2]))
     
     #fit linear model
     lin_mod_minT <- lm(cont_minT ~ sps_minT_SHAP_info[[j]]$relPolarwardness)
     abline(lin_mod_minT, col = '#0000FF', lwd = 2)
     
-    #get R^2
+    #get and plot R^2
     r2 <- summary(lin_mod_minT)$r.squared
-    text(0, 2, expression(bold(paste('R'^2*' = '), sep='')), col = '#0000FF', 
-         pos = 4)
-    text(0.08, 1.7, round(r2,3), col = '#0000FF', font = 2, pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 20), 
+         ylim[1], 
+         expression(bold(paste('R'^2*' = '), sep='')), col = '#0000FF', pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
+         ylim[1] - ((ylim[2] - ylim[1]) / 300), 
+         round(r2,3), col = '#0000FF', font = 2, pos = 4)
     
-    #pupulate vector
+    #populate vector
     minTR2_RP[length(minTR2_RP) + 1] <- r2
     
     #meanT
@@ -167,11 +173,14 @@ for(j in 1:length(sps_list_sel))
     lin_mod_meanT <- lm(cont_meanT ~ sps_meanT_SHAP_info[[j]]$relPolarwardness)
     abline(lin_mod_meanT, col = '#800080', lwd = 2)
     
-    #get R^2
+    #get and plot R^2
     r2 <- summary(lin_mod_meanT)$r.squared
-    text(0, 6, expression(bold(paste('R'^2*' = '), sep='')), col = '#800080',
-         pos = 4)
-    text(0.08, 5.7, round(r2,3), col = '#800080', font = 2, pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 20), 
+         ylim[1] + ((ylim[2] - ylim[1]) / 22), 
+         expression(bold(paste('R'^2*' = '), sep='')), col = '#800080', pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
+         ylim[1] + ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
+         round(r2,3), col = '#800080', font = 2, pos = 4)
     
     #pupulate vector
     meanTR2_RP[length(meanTR2_RP) + 1] <- r2
@@ -184,32 +193,47 @@ for(j in 1:length(sps_list_sel))
     lin_mod_maxT <- lm(cont_maxT ~ sps_maxT_SHAP_info[[j]]$relPolarwardness)
     abline(lin_mod_maxT, col = '#FF0000', lwd = 2)
     
-    #get R^2
+    #get and plot R^2
     r2 <- summary(lin_mod_maxT)$r.squared
-    text(0, 10, expression(bold(paste('R'^2*' = '), sep='')), col = '#FF0000',
-         pos = 4)
-    text(0.08, 9.7, round(r2,3), col = '#FF0000', font = 2, pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 20), 
+         ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22), 
+         expression(bold(paste('R'^2*' = '), sep='')), col = '#FF0000', pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
+         ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
+         round(r2,3), col = '#FF0000', font = 2, pos = 4)
+    
     
     #pupulate vector
     maxTR2_RP[length(maxTR2_RP) + 1] <- r2
     
     #plot species range size and roundness
-    text(0.78, 97, 'Range', font = 2, cex = 0.8, pos = 4)
-    text(0.78, 92, 
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5), 
+         ylim[2] - ((ylim[2] - ylim[1]) / 25), 
+         'Range', font = 2, cex = 0.8, pos = 4)
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5),
+         ylim[2] - 2 * ((ylim[2] - ylim[1]) / 25), 
          paste0('Size  ', unique(round(sps_maxT_SHAP_info[[j]]$rangeSize))), 
          cex = 0.7, pos = 4)
-    text(0.78, 88, paste0('Roundness  ',
-                          unique(round(sps_maxT_SHAP_info[[j]]$roundness, 2))),
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5),
+         ylim[2] - 2.8 * ((ylim[2] - ylim[1]) / 25),
+         paste0('Roundness  ',
+                unique(round(sps_maxT_SHAP_info[[j]]$roundness, 2))),
          cex = 0.7, pos = 4)
-    text(0.78, 84, paste0('Max lat  ',
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5),
+         ylim[2] - 3.6 * ((ylim[2] - ylim[1]) / 25),
+         paste0('Max lat  ',
                     round(max(abs(sps_maxT_SHAP_info[[j]]$decimalLatitude)), 2)),
          cex = 0.7, pos = 4)
-    text(0.78, 80, paste0('Min lat  ',
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5),
+         ylim[2] - 4.4 * ((ylim[2] - ylim[1]) / 25),
+         paste0('Min lat  ',
                     round(min(abs(sps_minT_SHAP_info[[j]]$decimalLatitude)), 2)),
          cex = 0.7, pos = 4)
     
     #plot species name
-    text(0,97, sps_list_sel[j], font = 4, pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 20),
+         ylim[2] - ((ylim[2] - ylim[1]) / 25),
+         sps_list_sel[j], font = 4, pos = 4)
     
     dev.off()
     
@@ -225,17 +249,29 @@ for(j in 1:length(sps_list_sel))
     #set parametres for plotting
     par(mar = c(5,5,5,5))
     
+    #get y and x lims
+    ylim <- range(c(cont_minT, cont_meanT, cont_maxT))
+    xlim <- range(sps_minT_SHAP_info_allSpp$centralness) #does not matter which I use
+    
     #minT
     plot(sps_minT_SHAP_info[[j]]$centralness, cont_minT, 
-         pch = 19, cex = 0.4, col = '#0000FF10',
+         pch = 19, cex = 0.4, col = '#0000FF15',
          ylab = 'Temperature contribution',
          xlab = 'Centralness',
-         ylim = c(0,100),
-         xlim = c(0,1))
+         ylim = c(ylim[1], ylim[2]))
     
     #fit linear model
     lin_mod_minT <- lm(cont_minT ~ sps_minT_SHAP_info[[j]]$centralness)
     abline(lin_mod_minT, col = '#0000FF', lwd = 2)
+    
+    #get and plot R^2
+    r2 <- summary(lin_mod_minT)$r.squared
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 20), 
+         ylim[1], 
+         expression(bold(paste('R'^2*' = '), sep='')), col = '#0000FF', pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
+         ylim[1] - ((ylim[2] - ylim[1]) / 300), 
+         round(r2,3), col = '#0000FF', font = 2, pos = 4)
     
     #get R^2
     r2 <- summary(lin_mod_minT)$r.squared
@@ -243,7 +279,7 @@ for(j in 1:length(sps_list_sel))
          pos = 4)
     text(0.08, 1.7, round(r2,3), col = '#0000FF', font = 2, pos = 4)
     
-    #pupulate vector
+    #populate vector
     minTR2_C[length(minTR2_C) + 1] <- r2
     
     #meanT

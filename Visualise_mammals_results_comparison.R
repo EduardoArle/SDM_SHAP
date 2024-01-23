@@ -85,8 +85,8 @@ for(i in 1:length(sps_list))
   #sum absolute values of both variables
   con_total_minT <- abs(sps_sp_minT$Min_T_SHAP) + abs(sps_sp_minT$Mean_PPT_SHAP)
   
-  #get percentage value of contribution
-  sps_sp_minT$MinT_perc <- abs(sps_sp_minT$Min_T_SHAP) / con_total_minT * 100
+  #get proportion of value of contribution (with signal)
+  sps_sp_minT$MinT_perc <- sps_sp_minT$Min_T_SHAP / con_total_minT * 100
   sps_sp_minT$MeanPPT_perc <- abs(sps_sp_minT$Mean_PPT_SHAP) / con_total_minT* 100
   
   #select only presences
@@ -212,11 +212,11 @@ for(i in 1:length(sps_list))
   
   pdf(file=paste0(sps_list[i],"_var_contribution.pdf"))
   
-  par(mfrow = c(2,3), mar = c(0,0,1,0))
+  par(mfrow = c(1,1), mar = c(0,0,1,0))
   
   #plot MIN T
-  plot(st_geometry(region), col = 'khaki', main = 'Min T')
-  plot(st_geometry(range), add = T, col = '#238b4590')
+  # plot(st_geometry(region), col = 'khaki', main = 'Min T')
+  plot(st_geometry(range), add = F, col = '#0000FF20')
   plot(st_geometry(sps_sp_minT_pr), add = T, pch = 21, 
        col = 'black', bg = 'red', cex = (sps_sp_minT_pr$MinT_perc / 50) + 0.1)
   

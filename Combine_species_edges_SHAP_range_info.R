@@ -175,11 +175,11 @@ for(j in 1:length(sps_list_sel))
     minTR2_RP[length(minTR2_RP) + 1] <- r2
     
     #meanT
-    points(sps_meanT_SHAP_info[[j]]$absPolarwardness, cont_meanT, 
+    points(sps_meanT_SHAP_info[[j]]$relPolarwardness, cont_meanT, 
            pch = 19, cex = 0.4, col = '#80008010')
     
     #fit linear model
-    lin_mod_meanT <- lm(cont_meanT ~ sps_meanT_SHAP_info[[j]]$absPolarwardness)
+    lin_mod_meanT <- lm(cont_meanT ~ sps_meanT_SHAP_info[[j]]$relPolarwardness)
     abline(lin_mod_meanT, col = '#800080', lwd = 2)
     
     #get R^2
@@ -192,11 +192,11 @@ for(j in 1:length(sps_list_sel))
     meanTR2_RP[length(meanTR2_RP) + 1] <- r2
     
     #maxT
-    points(sps_maxT_SHAP_info[[j]]$absPolarwardness, cont_maxT, 
+    points(sps_maxT_SHAP_info[[j]]$relPolarwardness, cont_maxT, 
            pch = 19, cex = 0.4, col = '#FF000010')
     
     #fit linear model
-    lin_mod_maxT <- lm(cont_maxT ~ sps_maxT_SHAP_info[[j]]$absPolarwardness)
+    lin_mod_maxT <- lm(cont_maxT ~ sps_maxT_SHAP_info[[j]]$relPolarwardness)
     abline(lin_mod_maxT, col = '#FF0000', lwd = 2)
     
     #get R^2

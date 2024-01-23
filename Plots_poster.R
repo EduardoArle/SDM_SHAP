@@ -6,9 +6,9 @@
 #list wds
 wd_res_shap <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Comparison'
 wd_pts_measure <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Point_and_range_measurements'
-wd_res <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Results_analyses/Each_species_all_points_posneg'
+wd_res <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Results_analyses/Each_species_all_points'
 wd_tables <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Results_analyses/Tables'
-
+wd_test <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Results_analyses/Test'
 
 #list species 
 setwd(wd_pts_measure)
@@ -102,7 +102,11 @@ rangeSize <- numeric()
 rangeRoundness <- numeric()
 maxLat <- numeric()
 minLat <- numeric()
-  
+
+
+  ############# use species j = 32
+
+
 ## Loop through species
 for(j in 1:length(sps_list_sel))
 {
@@ -120,13 +124,19 @@ for(j in 1:length(sps_list_sel))
     ## Calculate percentage contribution of the variables (no negatives)
     
     #minT
-    cont_minT <- sps_minT_SHAP_info[[j]][,9]
+    cont_minT <- abs(sps_minT_SHAP_info[[j]][,9]) / 
+      (abs(sps_minT_SHAP_info[[j]][,9]) + 
+         abs(sps_minT_SHAP_info[[j]][,8])) * 100
     
     #meanT
-    cont_meanT <- sps_meanT_SHAP_info[[j]][,9]
+    cont_meanT <- abs(sps_meanT_SHAP_info[[j]][,9]) / 
+      (abs(sps_meanT_SHAP_info[[j]][,9]) + 
+         abs(sps_meanT_SHAP_info[[j]][,8])) * 100
     
     #maxT
-    cont_maxT <- sps_maxT_SHAP_info[[j]][,9]
+    cont_maxT <- abs(sps_maxT_SHAP_info[[j]][,9]) / 
+      (abs(sps_maxT_SHAP_info[[j]][,9]) + 
+         abs(sps_maxT_SHAP_info[[j]][,8])) * 100
     
     ## Save plot temperature variables contribution per relative polarwardness
     
@@ -140,7 +150,9 @@ for(j in 1:length(sps_list_sel))
     
     #minT
     plot(sps_minT_SHAP_info[[j]]$relPolarwardness, cont_minT, 
-         pch = 19, cex = 0.4, col = '#0000FF15',
+         pch = 19, cex = 0.8, col = '#0000FF15',
+         cex.lab = 2, 
+         cex.axis = 2,
          ylab = 'Temperature contribution',
          xlab = 'Relative polarwardness',
          ylim = c(0,100),
@@ -148,48 +160,48 @@ for(j in 1:length(sps_list_sel))
     
     #fit linear model
     lin_mod_minT <- lm(cont_minT ~ sps_minT_SHAP_info[[j]]$relPolarwardness)
-    abline(lin_mod_minT, col = '#0000FF', lwd = 2)
+    abline(lin_mod_minT, col = '#0000FF', lwd = 5)
     
     #get R^2
-    r2 <- summary(lin_mod_minT)$r.squared
-    text(0, 2, expression(bold(paste('R'^2*' = '), sep='')), col = '#0000FF', 
-         pos = 4)
-    text(0.08, 1.7, round(r2,3), col = '#0000FF', font = 2, pos = 4)
+    # r2 <- summary(lin_mod_minT)$r.squared
+    # text(0, 80, expression(bold(paste('R'^2*' min = '), sep='')), col = '#0000FF', 
+    #      pos = 4)
+    # text(0.21, 80.1, round(r2,3), col = '#0000FF', font = 2, pos = 4)
     
     #pupulate vector
-    minTR2_RP[length(minTR2_RP) + 1] <- r2
+    # minTR2_RP[length(minTR2_RP) + 1] <- r2
     
     #meanT
     points(sps_meanT_SHAP_info[[j]]$relPolarwardness, cont_meanT, 
-           pch = 19, cex = 0.4, col = '#80008015')
+           pch = 19, cex = 0.8, col = '#80008015')
     
     #fit linear model
     lin_mod_meanT <- lm(cont_meanT ~ sps_meanT_SHAP_info[[j]]$relPolarwardness)
-    abline(lin_mod_meanT, col = '#800080', lwd = 2)
+    abline(lin_mod_meanT, col = '#800080', lwd = 5)
     
     #get R^2
-    r2 <- summary(lin_mod_meanT)$r.squared
-    text(0, 6, expression(bold(paste('R'^2*' = '), sep='')), col = '#800080',
-         pos = 4)
-    text(0.08, 5.7, round(r2,3), col = '#800080', font = 2, pos = 4)
-    
-    #pupulate vector
-    meanTR2_RP[length(meanTR2_RP) + 1] <- r2
+    # r2 <- summary(lin_mod_meanT)$r.squared
+    # text(0,85, expression(bold(paste('R'^2*' mean = '), sep='')), col = '#800080',
+    #      pos = 4)
+    # text(0.21, 85.1, round(r2,3), col = '#800080', font = 2, pos = 4)
+    # 
+    # #pupulate vector
+    # meanTR2_RP[length(meanTR2_RP) + 1] <- r2
     
     #maxT
     points(sps_maxT_SHAP_info[[j]]$relPolarwardness, cont_maxT, 
-           pch = 19, cex = 0.4, col = '#FF000015')
+           pch = 19, cex = 0.8, col = '#FF000015')
     
     #fit linear model
     lin_mod_maxT <- lm(cont_maxT ~ sps_maxT_SHAP_info[[j]]$relPolarwardness)
-    abline(lin_mod_maxT, col = '#FF0000', lwd = 2)
+    abline(lin_mod_maxT, col = '#FF0000', lwd = 5)
     
     #get R^2
-    r2 <- summary(lin_mod_maxT)$r.squared
-    text(0, 10, expression(bold(paste('R'^2*' = '), sep='')), col = '#FF0000',
-         pos = 4)
-    text(0.08, 9.7, round(r2,3), col = '#FF0000', font = 2, pos = 4)
-    
+    # r2 <- summary(lin_mod_maxT)$r.squared
+    # text(0, 90, expression(bold(paste('R'^2*' max = '), sep='')), col = '#FF0000',
+    #      pos = 4)
+    # text(0.21, 90.1, round(r2,3), col = '#FF0000', font = 2, pos = 4)
+    # 
     #pupulate vector
     maxTR2_RP[length(maxTR2_RP) + 1] <- r2
     
