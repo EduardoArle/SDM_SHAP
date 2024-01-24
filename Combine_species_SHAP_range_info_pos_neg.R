@@ -133,7 +133,7 @@ for(j in 1:length(sps_list_sel))
     #### TEST #### change wd after
     #setwd(wd_res)
     setwd(wd_sps)
-    pdf(file = paste0(gsub(' ', '_', sps_list_sel[j]),'_Temperature_RelPolar.pdf'))
+    pdf(file = paste0(gsub(' ', '_', sps_list_sel[j]),'_Temperature_RelPolarness.pdf'))
     
     #set parametres for plotting
     par(mar = c(5,5,5,5))
@@ -155,7 +155,7 @@ for(j in 1:length(sps_list_sel))
     
     #get and plot R^2
     r2 <- summary(lin_mod_minT)$r.squared
-    text(xlim[1] + ((xlim[2] - xlim[1]) / 20), 
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
          ylim[1], 
          expression(bold(paste('R'^2*' = '), sep='')), col = '#0000FF', pos = 4)
     text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
@@ -175,7 +175,7 @@ for(j in 1:length(sps_list_sel))
     
     #get and plot R^2
     r2 <- summary(lin_mod_meanT)$r.squared
-    text(xlim[1] + ((xlim[2] - xlim[1]) / 20), 
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
          ylim[1] + ((ylim[2] - ylim[1]) / 22), 
          expression(bold(paste('R'^2*' = '), sep='')), col = '#800080', pos = 4)
     text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
@@ -195,15 +195,14 @@ for(j in 1:length(sps_list_sel))
     
     #get and plot R^2
     r2 <- summary(lin_mod_maxT)$r.squared
-    text(xlim[1] + ((xlim[2] - xlim[1]) / 20), 
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
          ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22), 
          expression(bold(paste('R'^2*' = '), sep='')), col = '#FF0000', pos = 4)
     text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
          ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
          round(r2,3), col = '#FF0000', font = 2, pos = 4)
     
-    
-    #pupulate vector
+    #populate vector
     maxTR2_RP[length(maxTR2_RP) + 1] <- r2
     
     #plot species range size and roundness
@@ -251,7 +250,7 @@ for(j in 1:length(sps_list_sel))
     
     #get y and x lims
     ylim <- range(c(cont_minT, cont_meanT, cont_maxT))
-    xlim <- range(sps_minT_SHAP_info_allSpp$centralness) #does not matter which I use
+    xlim <- range(sps_minT_SHAP_info[[j]]$centralness) #does not matter which I use
     
     #minT
     plot(sps_minT_SHAP_info[[j]]$centralness, cont_minT, 
@@ -266,18 +265,12 @@ for(j in 1:length(sps_list_sel))
     
     #get and plot R^2
     r2 <- summary(lin_mod_minT)$r.squared
-    text(xlim[1] + ((xlim[2] - xlim[1]) / 20), 
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
          ylim[1], 
          expression(bold(paste('R'^2*' = '), sep='')), col = '#0000FF', pos = 4)
     text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
          ylim[1] - ((ylim[2] - ylim[1]) / 300), 
          round(r2,3), col = '#0000FF', font = 2, pos = 4)
-    
-    #get R^2
-    r2 <- summary(lin_mod_minT)$r.squared
-    text(0, 2, expression(bold(paste('R'^2*' = '), sep='')), col = '#0000FF', 
-         pos = 4)
-    text(0.08, 1.7, round(r2,3), col = '#0000FF', font = 2, pos = 4)
     
     #populate vector
     minTR2_C[length(minTR2_C) + 1] <- r2
@@ -290,11 +283,14 @@ for(j in 1:length(sps_list_sel))
     lin_mod_meanT <- lm(cont_meanT ~ sps_meanT_SHAP_info[[j]]$centralness)
     abline(lin_mod_meanT, col = '#800080', lwd = 2)
     
-    #get R^2
+    #get and plot R^2
     r2 <- summary(lin_mod_meanT)$r.squared
-    text(0, 6, expression(bold(paste('R'^2*' = '), sep='')), col = '#800080',
-         pos = 4)
-    text(0.08, 5.7, round(r2,3), col = '#800080', font = 2, pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
+         ylim[1] + ((ylim[2] - ylim[1]) / 22), 
+         expression(bold(paste('R'^2*' = '), sep='')), col = '#800080', pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
+         ylim[1] + ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
+         round(r2,3), col = '#800080', font = 2, pos = 4)
     
     #pupulate vector
     meanTR2_C[length(meanTR2_C) + 1] <- r2
@@ -307,32 +303,46 @@ for(j in 1:length(sps_list_sel))
     lin_mod_maxT <- lm(cont_maxT ~ sps_maxT_SHAP_info[[j]]$centralness)
     abline(lin_mod_maxT, col = '#FF0000', lwd = 2)
     
-    #get R^2
+    #get and plot R^2
     r2 <- summary(lin_mod_maxT)$r.squared
-    text(0, 10, expression(bold(paste('R'^2*' = '), sep='')), col = '#FF0000',
-         pos = 4)
-    text(0.08, 9.7, round(r2,3), col = '#FF0000', font = 2, pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
+         ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22), 
+         expression(bold(paste('R'^2*' = '), sep='')), col = '#FF0000', pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
+         ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
+         round(r2,3), col = '#FF0000', font = 2, pos = 4)
     
-    #pupulate vector
+    #populate vector
     maxTR2_C[length(maxTR2_C) + 1] <- r2
     
     #plot species range size and roundness
-    text(0.78, 97, 'Range', font = 2, cex = 0.8, pos = 4)
-    text(0.78, 92, 
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5), 
+         ylim[2] - ((ylim[2] - ylim[1]) / 25), 
+         'Range', font = 2, cex = 0.8, pos = 4)
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5),
+         ylim[2] - 2 * ((ylim[2] - ylim[1]) / 25), 
          paste0('Size  ', unique(round(sps_maxT_SHAP_info[[j]]$rangeSize))), 
          cex = 0.7, pos = 4)
-    text(0.78, 88, paste0('Roundness  ',
-                          unique(round(sps_maxT_SHAP_info[[j]]$roundness, 2))),
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5),
+         ylim[2] - 2.8 * ((ylim[2] - ylim[1]) / 25),
+         paste0('Roundness  ',
+                unique(round(sps_maxT_SHAP_info[[j]]$roundness, 2))),
          cex = 0.7, pos = 4)
-    text(0.78, 84, paste0('Max lat  ',
-                          round(max(abs(sps_maxT_SHAP_info[[j]]$decimalLatitude)), 2)),
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5),
+         ylim[2] - 3.6 * ((ylim[2] - ylim[1]) / 25),
+         paste0('Max lat  ',
+                round(max(abs(sps_maxT_SHAP_info[[j]]$decimalLatitude)), 2)),
          cex = 0.7, pos = 4)
-    text(0.78, 80, paste0('Min lat  ',
-                          round(min(abs(sps_minT_SHAP_info[[j]]$decimalLatitude)), 2)),
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5),
+         ylim[2] - 4.4 * ((ylim[2] - ylim[1]) / 25),
+         paste0('Min lat  ',
+                round(min(abs(sps_minT_SHAP_info[[j]]$decimalLatitude)), 2)),
          cex = 0.7, pos = 4)
     
     #plot species name
-    text(0,97, sps_list_sel[j], font = 4, pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 20),
+         ylim[2] - ((ylim[2] - ylim[1]) / 25),
+         sps_list_sel[j], font = 4, pos = 4)
     
     dev.off()
     
@@ -456,19 +466,13 @@ for(j in 1:length(sps_list_sel))
     wd_sps <- paste0(wd_res, '/', gsub(' ', '_', sps_list_sel[j]))
     
     #minPPT
-    cont_minPPT <- abs(sps_minPPT_SHAP_info[[j]][,9]) / 
-      (abs(sps_minPPT_SHAP_info[[j]][,9]) + 
-         abs(sps_minPPT_SHAP_info[[j]][,8])) * 100
+    cont_minPPT <- sps_minPPT_SHAP_info[[j]][,9]
     
     #meanPPT
-    cont_meanPPT <- abs(sps_meanPPT_SHAP_info[[j]][,9]) / 
-      (abs(sps_meanPPT_SHAP_info[[j]][,9]) + 
-         abs(sps_meanPPT_SHAP_info[[j]][,8])) * 100
+    cont_meanPPT <- sps_meanPPT_SHAP_info[[j]][,9]
     
     #maxPPT
-    cont_maxPPT <- abs(sps_maxPPT_SHAP_info[[j]][,9]) / 
-      (abs(sps_maxPPT_SHAP_info[[j]][,9]) + 
-         abs(sps_maxPPT_SHAP_info[[j]][,8])) * 100
+    cont_maxPPT <- sps_maxPPT_SHAP_info[[j]][,9]
     
     ## Save plot precipitation variables contribution per relative polarwardness
     
@@ -481,25 +485,31 @@ for(j in 1:length(sps_list_sel))
     #set parametres for plotting
     par(mar = c(5,5,5,5))
     
+    #get y and x lims
+    ylim <- range(c(cont_minPPT, cont_meanPPT, cont_maxPPT))
+    xlim <- range(sps_minPPT_SHAP_info[[j]]$relPolarwardness) #does not matter which I use
+    
     #minPPT
     plot(sps_minPPT_SHAP_info[[j]]$relPolarwardness, cont_minPPT, 
          pch = 19, cex = 0.4, col = '#fc8d5910',
          ylab = 'Precipitation contribution',
          xlab = 'Relative Polarwardness',
-         ylim = c(0,100),
-         xlim = c(0,1))
+         ylim = c(ylim[1], ylim[2]))
     
     #fit linear model
     lin_mod_minPPT <- lm(cont_minPPT ~ sps_minPPT_SHAP_info[[j]]$relPolarwardness)
     abline(lin_mod_minPPT, col = '#fc8d59', lwd = 2)
      
-    #get R^2
+    #get and plot R^2
     r2 <- summary(lin_mod_minPPT)$r.squared
-    text(0, 2, expression(bold(paste('R'^2*' = '), sep='')), col = '#fc8d59',
-         pos = 4)
-    text(0.08, 1.7, round(r2,3), col = '#ff8d59', font = 2, pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 25),
+         ylim[1],
+         expression(bold(paste('R'^2*' = '), sep='')), col = '#fc8d59', pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
+         ylim[1] - ((ylim[2] - ylim[1]) / 300),
+         round(r2,3), col = '#fc8d59', font = 2, pos = 4)
     
-    #pupulate vector
+    #populate vector
     minPPTR2_RP[length(minPPTR2_RP) + 1] <- r2
     
     #meanPPT
@@ -510,13 +520,16 @@ for(j in 1:length(sps_list_sel))
     lin_mod_meanPPT <- lm(cont_meanPPT ~ sps_meanPPT_SHAP_info[[j]]$relPolarwardness)
     abline(lin_mod_meanPPT, col = '#8c510a', lwd = 2)
     
-    #get R^2
-    r2 <- summary(lin_mod_meanPPT)$r.squared
-    text(0, 6, expression(bold(paste('R'^2*' = '), sep='')), col = '#8c510a',
-         pos = 4)
-    text(0.08, 5.7, round(r2,3), col = '#8c510a', font = 2, pos = 4)
+    #get and plot R^2
+    r2 <- summary(lin_mod_meanT)$r.squared
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
+         ylim[1] + ((ylim[2] - ylim[1]) / 22), 
+         expression(bold(paste('R'^2*' = '), sep='')), col = '#8c510a', pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
+         ylim[1] + ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
+         round(r2,3), col = '#8c510a', font = 2, pos = 4)
     
-    #pupulate vector
+    #populate vector
     meanPPTR2_RP[length(meanPPTR2_RP) + 1] <- r2
     
     #maxPPT
@@ -526,33 +539,47 @@ for(j in 1:length(sps_list_sel))
     #fit linear model
     lin_mod_maxPPT <- lm(cont_maxPPT ~ sps_maxPPT_SHAP_info[[j]]$relPolarwardness)
     abline(lin_mod_maxPPT, col = '#1a9850', lwd = 2)
+
+    #get and plot R^2
+    r2 <- summary(lin_mod_maxT)$r.squared
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
+         ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22), 
+         expression(bold(paste('R'^2*' = '), sep='')), col = '#1a9850', pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
+         ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
+         round(r2,3), col = '#1a9850', font = 2, pos = 4)
     
-    #get R^2
-    r2 <- summary(lin_mod_maxPPT)$r.squared
-    text(0, 10, expression(bold(paste('R'^2*' = '), sep='')), col = '#1a9850',
-         pos = 4)
-    text(0.08, 9.7, round(r2,3), col = '#1a9850', font = 2, pos = 4)
-    
-    #pupulate vector
+    #populate vector
     maxPPTR2_RP[length(maxPPTR2_RP) + 1] <- r2
     
     #plot species range size and roundness
-    text(0.78, 97, 'Range', font = 2, cex = 0.8, pos = 4)
-    text(0.78, 92, 
-         paste0('Size  ', unique(round(sps_maxPPT_SHAP_info[[j]]$rangeSize))), 
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5), 
+         ylim[2] - ((ylim[2] - ylim[1]) / 25), 
+         'Range', font = 2, cex = 0.8, pos = 4)
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5),
+         ylim[2] - 2 * ((ylim[2] - ylim[1]) / 25), 
+         paste0('Size  ', unique(round(sps_maxT_SHAP_info[[j]]$rangeSize))), 
          cex = 0.7, pos = 4)
-    text(0.78, 88, paste0('Roundness  ',
-                          unique(round(sps_maxPPT_SHAP_info[[j]]$roundness, 2))),
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5),
+         ylim[2] - 2.8 * ((ylim[2] - ylim[1]) / 25),
+         paste0('Roundness  ',
+                unique(round(sps_maxT_SHAP_info[[j]]$roundness, 2))),
          cex = 0.7, pos = 4)
-    text(0.78, 84, paste0('Max lat  ',
-         round(max(abs(sps_maxPPT_SHAP_info[[j]]$decimalLatitude)), 2)),
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5),
+         ylim[2] - 3.6 * ((ylim[2] - ylim[1]) / 25),
+         paste0('Max lat  ',
+                round(max(abs(sps_maxT_SHAP_info[[j]]$decimalLatitude)), 2)),
          cex = 0.7, pos = 4)
-    text(0.78, 80, paste0('Min lat  ',
-         round(min(abs(sps_minPPT_SHAP_info[[j]]$decimalLatitude)), 2)),
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5),
+         ylim[2] - 4.4 * ((ylim[2] - ylim[1]) / 25),
+         paste0('Min lat  ',
+                round(min(abs(sps_minT_SHAP_info[[j]]$decimalLatitude)), 2)),
          cex = 0.7, pos = 4)
     
     #plot species name
-    text(0,97, sps_list_sel[j], font = 4, pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 20),
+         ylim[2] - ((ylim[2] - ylim[1]) / 25),
+         sps_list_sel[j], font = 4, pos = 4)
     
     dev.off()
     
@@ -568,23 +595,29 @@ for(j in 1:length(sps_list_sel))
     #set parametres for plotting
     par(mar = c(5,5,5,5))
     
+    #get y and x lims
+    ylim <- range(c(cont_minPPT, cont_meanPPT, cont_maxPPT))
+    xlim <- range(sps_minPPT_SHAP_info[[j]]$centralness) #does not matter which I use
+    
     #minPPT
     plot(sps_minPPT_SHAP_info[[j]]$centralness, cont_minPPT, 
          pch = 19, cex = 0.4, col = '#fc8d5910',
          ylab = 'Precipitation contribution',
          xlab = 'Centralness',
-         ylim = c(0,100),
-         xlim = c(0,1))
+         ylim = c(ylim[1], ylim[2]))
     
     #fit linear model
     lin_mod_minPPT <- lm(cont_minPPT ~ sps_minPPT_SHAP_info[[j]]$centralness)
     abline(lin_mod_minPPT, col = '#fc8d59', lwd = 2)
     
-    #get R^2
+    #get and plot R^2
     r2 <- summary(lin_mod_minPPT)$r.squared
-    text(0, 2, expression(bold(paste('R'^2*' = '), sep='')), col = '#fc8d59',
-         pos = 4)
-    text(0.08, 1.7, round(r2,3), col = '#ff8d59', font = 2, pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 25),
+         ylim[1],
+         expression(bold(paste('R'^2*' = '), sep='')), col = '#fc8d59', pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
+         ylim[1] - ((ylim[2] - ylim[1]) / 300),
+         round(r2,3), col = '#fc8d59', font = 2, pos = 4)
     
     #pupulate vector
     minPPTR2_C[length(minPPTR2_C) + 1] <- r2
@@ -597,11 +630,14 @@ for(j in 1:length(sps_list_sel))
     lin_mod_meanPPT <- lm(cont_meanPPT ~ sps_meanPPT_SHAP_info[[j]]$centralness)
     abline(lin_mod_meanPPT, col = '#8c510a', lwd = 2)
     
-    #get R^2
-    r2 <- summary(lin_mod_meanPPT)$r.squared
-    text(0, 6, expression(bold(paste('R'^2*' = '), sep='')), col = '#8c510a',
-         pos = 4)
-    text(0.08, 5.7, round(r2,3), col = '#8c510a', font = 2, pos = 4)
+    #get and plot R^2
+    r2 <- summary(lin_mod_meanT)$r.squared
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
+         ylim[1] + ((ylim[2] - ylim[1]) / 22), 
+         expression(bold(paste('R'^2*' = '), sep='')), col = '#8c510a', pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
+         ylim[1] + ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
+         round(r2,3), col = '#8c510a', font = 2, pos = 4)
     
     #pupulate vector
     meanPPTR2_C[length(meanPPTR2_C) + 1] <- r2
@@ -614,32 +650,46 @@ for(j in 1:length(sps_list_sel))
     lin_mod_maxPPT <- lm(cont_maxPPT ~ sps_maxPPT_SHAP_info[[j]]$centralness)
     abline(lin_mod_maxPPT, col = '#1a9850', lwd = 2)
     
-    #get R^2
-    r2 <- summary(lin_mod_maxPPT)$r.squared
-    text(0, 10, expression(bold(paste('R'^2*' = '), sep='')), col = '#1a9850',
-         pos = 4)
-    text(0.08, 9.7, round(r2,3), col = '#1a9850', font = 2, pos = 4)
+    #get and plot R^2
+    r2 <- summary(lin_mod_maxT)$r.squared
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
+         ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22), 
+         expression(bold(paste('R'^2*' = '), sep='')), col = '#1a9850', pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
+         ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
+         round(r2,3), col = '#1a9850', font = 2, pos = 4)
     
     #pupulate vector
     maxPPTR2_C[length(maxPPTR2_C) + 1] <- r2
     
     #plot species range size and roundness
-    text(0.78, 97, 'Range', font = 2, cex = 0.8, pos = 4)
-    text(0.78, 92, 
-         paste0('Size  ', unique(round(sps_maxPPT_SHAP_info[[j]]$rangeSize))), 
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5), 
+         ylim[2] - ((ylim[2] - ylim[1]) / 25), 
+         'Range', font = 2, cex = 0.8, pos = 4)
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5),
+         ylim[2] - 2 * ((ylim[2] - ylim[1]) / 25), 
+         paste0('Size  ', unique(round(sps_maxT_SHAP_info[[j]]$rangeSize))), 
          cex = 0.7, pos = 4)
-    text(0.78, 88, paste0('Roundness  ',
-                          unique(round(sps_maxPPT_SHAP_info[[j]]$roundness, 2))),
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5),
+         ylim[2] - 2.8 * ((ylim[2] - ylim[1]) / 25),
+         paste0('Roundness  ',
+                unique(round(sps_maxT_SHAP_info[[j]]$roundness, 2))),
          cex = 0.7, pos = 4)
-    text(0.78, 84, paste0('Max lat  ',
-                round(max(abs(sps_maxPPT_SHAP_info[[j]]$decimalLatitude)), 2)),
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5),
+         ylim[2] - 3.6 * ((ylim[2] - ylim[1]) / 25),
+         paste0('Max lat  ',
+                round(max(abs(sps_maxT_SHAP_info[[j]]$decimalLatitude)), 2)),
          cex = 0.7, pos = 4)
-    text(0.78, 80, paste0('Min lat  ',
-                 round(min(abs(sps_minPPT_SHAP_info[[j]]$decimalLatitude)), 2)),
+    text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5),
+         ylim[2] - 4.4 * ((ylim[2] - ylim[1]) / 25),
+         paste0('Min lat  ',
+                round(min(abs(sps_minT_SHAP_info[[j]]$decimalLatitude)), 2)),
          cex = 0.7, pos = 4)
     
     #plot species name
-    text(0,97, sps_list_sel[j], font = 4, pos = 4)
+    text(xlim[1] + ((xlim[2] - xlim[1]) / 20),
+         ylim[2] - ((ylim[2] - ylim[1]) / 25),
+         sps_list_sel[j], font = 4, pos = 4)
     
     dev.off()
     
