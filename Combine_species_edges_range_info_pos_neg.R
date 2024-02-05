@@ -6,8 +6,8 @@
 #list wds
 wd_res_shap <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Comparison'
 wd_pts_measure <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Point_and_range_measurements'
-wd_res <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Results_analyses/Each_species_all_points_posneg'
-wd_tables <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Results_analyses/Each_species_all_points_posneg'
+wd_res <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Results_analyses/Each_species_edges_posneg'
+wd_tables <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Results_analyses/Each_species_edges_posneg'
 
 
 #list species 
@@ -90,6 +90,15 @@ for(j in 1:length(sps_maxT_pr))
                                   'absPolarwardness','relPolarwardness')])
 }
 
+## Select only rows representing points relatively close to edges 
+## (centralness <= 0.2)
+sps_minT_SHAP_info <- lapply(sps_minT_SHAP_info,
+                             function(x){x[x$centralness <= 0.2,]}) #minT
+sps_meanT_SHAP_info <- lapply(sps_meanT_SHAP_info,
+                              function(x){x[x$centralness <= 0.2,]}) #meanT
+sps_maxT_SHAP_info <- lapply(sps_maxT_SHAP_info,
+                             function(x){x[x$centralness <= 0.2,]}) #maxT
+
 #create vectors to store the results for each species
 species <- character()
 minTR2_RP <- numeric()
@@ -108,7 +117,7 @@ n_records <- numeric()
 for(j in 1:length(sps_list_sel))
 {
   #skip sps with only one point
-  if(j != 28){
+  if(j != 11 & j != 28){
     #list spp
     species[length(species) + 1] <- sps_list_sel[j]
     
@@ -440,10 +449,18 @@ for(j in 1:length(sps_maxPPT_pr))
                                   'absPolarwardness','relPolarwardness')])
 }
 
+## Select only rows representing points relatively close to edges 
+## (centralness <= 0.2)
+sps_minPPT_SHAP_info <- lapply(sps_minPPT_SHAP_info,
+                               function(x){x[x$centralness <= 0.2,]}) #minT
+sps_meanPPT_SHAP_info <- lapply(sps_meanPPT_SHAP_info,
+                                function(x){x[x$centralness <= 0.2,]}) #meanT
+sps_maxPPT_SHAP_info <- lapply(sps_maxPPT_SHAP_info,
+                               function(x){x[x$centralness <= 0.2,]}) #maxT
+
 
 #create vectors to store the results for each species
 species <- character()
-n_records <- numeric()
 minPPTR2_RP <- numeric()
 meanPPTR2_RP <- numeric()
 maxPPTR2_RP <- numeric()
@@ -454,13 +471,14 @@ rangeSize <- numeric()
 rangeRoundness <- numeric()
 maxLat <- numeric()
 minLat <- numeric()
+n_records <- numeric()
 
 
 ## Loop through species
 for(j in 1:length(sps_list_sel))
 {
   #skip sps with only one point
-  if(j != 28){
+  if(j != 11 & j != 28){
     #list spp
     species[length(species) + 1] <- sps_list_sel[j]
     
@@ -707,7 +725,7 @@ for(j in 1:length(sps_list_sel))
 }
 
 #create a dataframe with the results for all species
-prec_all_pts <- data.frame(species = species,
+prec_all_pts <- data.frame(species = species, 
                            n_records = n_records,
                            rangeSize = rangeSize,
                            rangeRoundness = rangeRoundness,
@@ -719,6 +737,7 @@ prec_all_pts <- data.frame(species = species,
                            minPPTR2_C = minPPTR2_C,
                            meanPPTR2_C = meanPPTR2_C, 
                            maxPPTR2_C = maxPPTR2_C)
+
 
 #save table
 setwd(wd_tables)

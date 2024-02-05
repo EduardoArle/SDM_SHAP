@@ -9,9 +9,9 @@ wd_lists <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Specie
 wd_maps <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Maps'
 wd_res <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results'
 
-#load species list
+#load species list (chose with list from the folder)
 setwd(wd_lists)
-sps_list <- readRDS('Selected_mammal_species')
+sps_list <- readRDS('Selected_mammal_species_7')
 
 #load one variable to thin the records by the same resolution
 setwd(wd_variables)
@@ -26,8 +26,10 @@ n_GBIF <- numeric()
 n_recs_range <- numeric()
 n_thinned_recs <- numeric()
 
+### did not work c(19, 21)
+
 #download and thin point records from GBIF
-for(i in 1:length(sps_list))
+for(i in 39:length(sps_list))
 {
   #download occ from GBIF using bRacatus
   sps_occ <- getOcc(sps_list[i])
@@ -101,7 +103,7 @@ res <- data.frame(Species = sps_list,
 
 
 setwd(wd_res)
-write.csv(res, 'Species_occurrence.csv', row.names = F)
+write.csv(res, 'Species_occurrence_4.csv', row.names = F)
 
 ######
 
