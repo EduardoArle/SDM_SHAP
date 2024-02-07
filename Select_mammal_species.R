@@ -14,7 +14,7 @@ world <- getMap()
 
 #visualise species distributions and choose the ones that are continuous and do not border the oceans (manually)
 
-i = 3921
+i = 5620
 
 range <- st_read(dsn = wd_ranges, layer = sps_list[i])
 
@@ -111,7 +111,6 @@ sel_sps_indices <- c(13, 69, 85, 87, 92, 93, 98, 107, 108, 112, 113, 147, 167,
 
 sel_species <- c('Abrothrix andinus', 'Aethomys nyikae', 'Akodon dayi', 'Akodon fumeus', 'Akodon lutescens', 'Akodon mimus', 'Akodon orophilus', 'Akodon simulator', 'Akodon spegazzinii', 'Akodon toba', 'Akodon torques', 'Alouatta caraya', 'Alticola semicanus', 'Ammospermophilus interpres', 'Anoura aequatoris', 'Aotus lemurinus', 'Aotus vociferans', 'Apodemus alpicola', 'Apodemus pallipes', 'Ateles chamek', 'Auliscomys boliviensis', 'Auliscomys pictus', 'Auliscomys sublimis', 'Blarina hylophaga', 'Callithrix penicillata', 'Callospermophilus madrensis', 'Calomys boliviae', 'Calomys lepidus', 'Calomys sorellus', 'Calomys tener', 'Calomys venustus', 'Calomyscus bailwardi', 'Calomyscus baluchi', 'Cebuella pygmaea', 'Cebus versicolor', 'Cercopithecus wolfi', 'Chalinolobus picatus', 'Cratogeomys goldmani', 'Cricetulus longicaudatus', 'Crocidura hildegardeae', 'Crocidura latona', 'Crocidura littoralis', 'Crocidura luna', 'Ctenomys maulinus', 'Ctenomys mendocinus', 'Ctenomys opimus', 'Ctenomys yolandae', 'Cuniculus taczanowskii', 'Cynomys gunnisoni', 'Cynomys leucurus')
 
-## list more chosen species (for now)
 
 sel_sps_indices <- c(1220, 1221, 1232, 1233, 1243, 1244, 1248, 1262, 1266, 1269,
                      1315, 1337, 1354, 1371, 1372, 1375, 1377, 1399, 1409, 1427,
@@ -158,10 +157,6 @@ sel_sps_indices <- c(3050, 3061, 3070, 3072, 3100, 3120, 3121, 3122, 3131, 3172,
 
 sel_species <- c("Mus callewaerti", "Mus indutus", "Mus oubanguii", "Mus phillipsi", "Mustela nigripes", "Myomimus setzeri", "Myomyscus angolensis", "Myomyscus brockmani", "Myopterus daubentonii", "Myotis badius", "Myotis bucharensis", "Myotis ciliolabrum", "Myotis csorbai", "Myotis occultus", "Myotis sicarius", "Naemorhedus baileyi", "Neacomys minutus", "Neacomys musseri", "Neacomys spinosus", "Necromys amoenus", "Necromys punctulatus", "Necromys temchuki", "Nelsonia neotomodon", "Neodon fuscus", "Neodon irene", "Neomicroxus latebricola", "Neoromicia matroka", "Neotamias alpinus", "Neotamias bulleri", "Neotamias canipes", "Neotamias cinereicollis", "Neotamias quadrivittatus", "Neotamias ruficaudus", "Neotamias rufus", "Neotoma goldmani", "Neotoma lepida", "Neotoma leucodon", "Neotoma magister", "Neotoma stephensi", "Nephelomys keaysi", "Nephelomys levipes", "Neusticomys ferreirai", "Ningaui ridei", "Niviventer brahma", "Niviventer niviventer", "Notomys cervinus", "Notomys fuscus", "Nycteris woodi", "Ochotona curzoniae", "Ochotona erythrotis")
 
-
-#############
-
-
 sel_sps_indices <- c(3568, 3569, 3574, 3575, 3576, 3577, 3578, 3581, 3582, 3584,
                      3587, 3588, 3594, 3595, 3601, 3605, 3606, 3608, 3611, 3614,
                      3618, 3620, 3621, 3623, 3628, 3631, 3632, 3634, 3635, 3639,
@@ -170,6 +165,49 @@ sel_sps_indices <- c(3568, 3569, 3574, 3575, 3576, 3577, 3578, 3581, 3582, 3584,
 
 sel_species <- c("Ochotona forresti", "Ochotona gloveri", "Ochotona ladacensis", "Ochotona macrotis", "Ochotona mantchurica", "Ochotona nubrica", "Ochotona opaca", "Ochotona pusilla", "Ochotona roylei", "Ochotona rutila", "Ochotona thomasi", "Ochotona turuchanensis", "Octodontomys gliroides", "Octomys mimax", "Oecomys cleberi", "Oecomys paricola", "Oecomys phaeotis", "Oecomys phaeotis", "Oecomys superans", "Oenomys ornatus", "Oligoryzomys andinus", "Oligoryzomys brendae", "Oligoryzomys chacoensis", "Oligoryzomys destructor", "Oligoryzomys griseolus", "Oligoryzomys microtis", "Oligoryzomys moojeni", "Oligoryzomys rupestris", "Oligoryzomys stramineus", "Onychomys arenicola", "Oreoryzomys balneator", "Otomys anchietae", "Otomys cuanzensis", "Otomys helleri", "Otomys sloggetti", "Otomys typus", "Oxymycterus amazonicus", "Oxymycterus hiska", "Oxymycterus inca", "Oxymycterus paramensis", "Oxymycterus roberti", "Pantholops hodgsonii", "Paraxerus lucifer", "Perognathus fasciatus", "Perognathus parvus", "Peromyscus attwateri", "Peromyscus levipes", "Peromyscus nasutus", "Peromyscus polius", "Petaurista mechukaensis")
 
+
+sel_sps_indices <- c(3922, 3926, 3962, 3963, 3968, 3997, 4000, 4039, 4042, 4048,
+                     4050, 4051, 4059, 4060, 4061, 4062, 4066, 4068, 4085, 4107,
+                     4108, 4109, 4110, 4111, 4112, 4113, 4114, 4115, 4116, 4117,
+                     4118, 4119, 4121, 4122, 4124, 4128, 4132, 4142, 4143, 4145,
+                     4152, 4157, 4159, 4164, 4168, 4169, 4171, 4172, 4173, 4175)
+
+sel_species <- c("Petaurista mishmiensis", "Petaurista xanthotis", "Petromyscus monticularis", "Petromyscus shortridgei", "Phaiomys leucurus", "Philander andersoni", "Philander mcilhennyi", "Phyllotis andium", "Phyllotis caprinus", "Phyllotis magister", "Phyllotis osilae", "Phyllotis wolffsohni", "Piliocolobus langi", "Piliocolobus lulindicus", "Piliocolobus oustaleti", "Piliocolobus parmentieri", "Piliocolobus semlikiensis", "Piliocolobus tholloni", "Pipistrellus inexspectatus", "Pithecia aequatorialis", "Pithecia albicans", "Pithecia cazuzai", "Pithecia chrysocephala", "Pithecia hirsuta", "Pithecia inusta", "Pithecia irrorata", "Pithecia isabela", "Pithecia milleri", "Pithecia mittermeieri", "Pithecia monachus", "Pithecia napensis", "Pithecia pissinattii", "Pithecia rylandsi", "Pithecia vanzolinii", "Planigale gilesi", "Planigale tenuirostris", "Platyrrhinus albericoi", "Platyrrhinus infuscus", "Platyrrhinus ismaeli", "Platyrrhinus masu", "Plecotus ariel", "Plecotus homochrous", "Plecotus kozlovi", "Plecotus strelkovi", "Plecotus wardi", "Plecturocebus aureipalatii", "Plecturocebus bernhardi", "Plecturocebus brunneus", "Plecturocebus caligatus", "Plecturocebus cinerascens")
+
+sel_sps_indices <- c(4176, 4177, 4178, 4179, 4180, 4181, 4182, 4184, 4187, 4188,
+                     4189, 4190, 4191, 4192, 4193, 4194, 4211, 4231, 4266, 4272,
+                     4277, 4278, 4282, 4283, 4284, 4286, 4287, 4288, 4291, 4292,
+                     4364, 4384, 4450, 4470, 4528, 4569, 4577, 4580, 4594, 4603,
+                     4606, 4616, 4621, 4635, 4656, 4659, 4561, 4683, 4695, 4697)
+
+sel_species <- c("Plecturocebus cupreus", "Plecturocebus discolor", "Plecturocebus donacophilus", "Plecturocebus dubius", "Plecturocebus grovesi", "Plecturocebus hoffmannsi", "Plecturocebus miltoni", "Plecturocebus moloch", "Plecturocebus ornatus", "Plecturocebus pallescens", "Plecturocebus parecis", "Plecturocebus stephennashi", "Plecturocebus toppini", "Plecturocebus urubambensis", "Plecturocebus vieirai", "Plerotes anchietae", "Poliocitellus franklinii", "Praomys misonnei", "Procapra picticaudata", "Proechimys brevicauda", "Proechimys echinothrix", "Proechimys gardneri", "Proechimys hoplomyoides", "Proechimys kulinae", "Proechimys longicaudatus", "Proechimys oconnelli", "Proechimys pattoni", "Proechimys quadruplicatus", "Proechimys simonsi", "Proechimys steerei", "Pseudomys australis", "Pseudoryzomys simplex", "Pteropus rufus", "Punomys lemminus", "Rattus pyctoris", "Reithrodontomys montanus", "Reithrodontomys zacatecae", "Rhabdomys intermedius", "Rhinolophus bocharicus", "Rhinolophus cohenae", "Rhinolophus damarensis", "Rhinolophus guineensis", "Rhinolophus huananus", "Rhinolophus mcintyrei", "Rhinolophus schnitzleri", "Rhinolophus shortridgei", "Rhinolophus silvestris", "Rhinopithecus bieti", "Rhipidomys austrinus", "Rhipidomys caucensis")
+
+sel_sps_indices <- c(4701, 4702, 4706, 4709, 4711, 4712, 4715, 4722, 4775, 4776, 
+                     4778, 4779, 4780, 4782, 4787, 4788, 4792, 4795, 4797, 4803, 
+                     4813, 4819, 4821, 4833, 4840, 4844, 4847, 4849, 4850, 4851, 
+                     4853, 4854, 4859, 4860, 4861, 4877, 4895, 4901, 4905, 4919,
+                     4933, 4951, 4969, 4970, 4974, 4977, 4980, 4988, 5001, 5002)
+
+sel_species <- c("Rhipidomys gardneri", "Rhipidomys ipukensis", "Rhipidomys macconnelli", "Rhipidomys modicus", "Rhipidomys ochrogaster", "Rhipidomys tribei", "Rhipidomys wetzeli", "Rhogeessa hussoni", "Saguinus imperator", "Saguinus inustus", "Saguinus leucopus", "Saguinus martinsi", "Saguinus melanoleucus", "Saguinus mystax", "Saimiri boliviensis", "Saimiri cassiquiarensis", "Saimiri ustus", "Salinomys delicatus", "Salpingotus crassicauda", "Sapajus cay", "Scapanulus oweni", "Scaptonyx fusicaudus", "Scarturus euphratica", "Sciurus alleni", "Sciurus flammifer", "Sciurus ignitus", "Sciurus nayaritensis", "Sciurus oculatus", "Sciurus pucheranii", "Sciurus pyrrhinus", "Sciurus sanborni", "Sciurus spadiceus", "Scleronycteris ega", "Scolomys melanops", "Scolomys ucayalensis", "Scotophilus ejetai", "Scutisorex somereni", "Semnopithecus hector", "Semnopithecus schistaceus", "Sicista pseudonapaea", "Sigmodon ochrognathus", "Sminthopsis ooldea", "Sorex arizonae", "Sorex asper", "Sorex buchariensis", "Sorex cansulus", "Sorex cylindricauda", "Sorex haydeni", "Sorex merriami", "Sorex milleri")
+
+sel_sps_indices <- c(5007, 5008, 5016, 5029, 5030, 5040, 5050, 5058, 5067, 5068, 
+                     5084, 5089, 5095, 5112, 5116, 5124, 5142, 5193, 5196, 5199, 
+                     5211, 5292, 5295, 5296, 5298, 5304, 5307, 5308, 5319, 5320, 
+                     5321, 5322, 5323, 5324, 5325, 5326, 5327, 5328, 5329, 5330, 
+                     5331, 5333, 5335, 5337, 5339, 5340, 5343, 5344, 5345, 5347)
+
+sel_species <- c("Sorex nanus", "Sorex neomexicanus", "Sorex preblei", "Sorex tenellus", "Sorex thibetanus", "Sorex yukonicus", "Spalax graecus", "Spermophilus brevicauda", "Spermophilus ralli", "Spermophilus relictus", "Steatomys bocagei", "Steatomys opimus", "Stenocephalemys ruppi", "Sturnira magna", "Sturnira oporaphilum", "Stylodipus andrewsi", "Suncus remyi", "Sylvilagus nuttallii", "Sylvilagus robustus", "Sylvilagus varynaensis", "Sylvisorex oriundus", "Taterillus congicus", "Taterillus lacustris", "Taterillus petteri", "Taterillus tranieri", "Thallomys loringi", "Thallomys shortridgei", "Thalpomys cerradensis", "Thomasomys australis", "Thomasomys baeops", "Thomasomys bombycinus", "Thomasomys caudivarius", "Thomasomys cinereiventer", "Thomasomys cinereus", "Thomasomys cinnameus", "Thomasomys contradictus", "Thomasomys daphne", "Thomasomys dispar", "Thomasomys eleusis", "Thomasomys emeritus", "Thomasomys erro", "Thomasomys gracilis", "Thomasomys hylophilus", "Thomasomys ischyrus", "Thomasomys ladewi", "Thomasomys laniger", "Thomasomys nicefori", "Thomasomys niveipes", "Thomasomys notatus", "Thomasomys oreas")
+
+#############
+
+
+sel_sps_indices <- c(5348, 5349, 5350, 5351, 5352, 5354, 5355, 5356, 5361, 5371,
+                     5373, 5375, 5376, 5379, 5380, 5382, 5383, 5385, 5386, 5403, 
+                     5404, 5410, 5431, 5499, 5502, 5504, 5505, 5508, 5511, 5514, 
+                     5518, 5536, 5585, 5600, 5616, 5617, 5620)
+
+sel_species <- c("Thomasomys paramorum", "Thomasomys popayanus", "Thomasomys praetor", "Thomasomys princeps", "Thomasomys pyrrhonotus", "Thomasomys silvestris", "Thomasomys taczanowskii", "Thomasomys ucucha", "Thomomys clusius", "Thrichomys inermis", "Thrichomys pachyurus", "Thylamys cinderella", "Thylamys citellus", "Thylamys karimii", "Thylamys macrurus", "Thylamys pulchellus", "Thylamys pusillus", "Thylamys velutinus", "Thylamys venustus", "Tolypeutes matacus", "Tolypeutes tricinctus", "Toromys rhipidurus", "Trachypithecus shortridgei", "Tympanoctomys barrerae", "Typhlomys cinereus", "Urocitellus armatus", "Urocitellus beldingi", "Urocitellus columbianus", "Urocitellus mollis", "Urocitellus richardsonii", "Urocricetus alticola", "Uropsilus gracilis", "Vulpes ferrilata", "Xeronycteris vieirai", "Zelotomys hildegardeae", "Zelotomys woosnami", "Zygodontomys brunneus")
+
 #save list of selected species
 setwd(wd_lists)
-saveRDS(sel_species, 'Selected_mammal_species_7')
+saveRDS(sel_species, 'Selected_mammal_species_12')
