@@ -38,7 +38,7 @@ PrecipitationOfColdestQuarter <- raster('bio19.bil')
 
 ######## Run SHAP for all species ######
 
-for(i in 1:length(sps_list))
+for(i in 52:length(sps_list))
 {
   #select species
   sps <- sps_list[i]
@@ -393,7 +393,7 @@ for(i in 1:length(sps_list))
   
 }
 
-
+/Users/carloseduardoaribeiro/Documents/Files/Old files
 
 #################
 

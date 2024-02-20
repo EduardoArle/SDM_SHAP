@@ -92,23 +92,42 @@ for(j in 1:length(sps_maxT_pr))
 
 #create vectors to store the results for each species
 species <- character()
+n_records <- numeric()
 minTR2_RP <- numeric()
+minTslope_RP <- numeric()
+minTSE_RP <- numeric()
+minTp_value_RP <- numeric()
 meanTR2_RP <- numeric()
+meanTslope_RP <- numeric()
+meanTSE_RP <- numeric()
+meanTp_value_RP <- numeric()
 maxTR2_RP <- numeric()
+maxTslope_RP <- numeric()
+maxTSE_RP <- numeric()
+maxTp_value_RP <- numeric()
 minTR2_C <- numeric()
+minTslope_C <- numeric()
+minTSE_C <- numeric()
+minTp_value_C <- numeric()
 meanTR2_C <- numeric()
+meanTslope_C <- numeric()
+meanTSE_C <- numeric()
+meanTp_value_C <- numeric()
 maxTR2_C <- numeric()
+maxTslope_C <- numeric()
+maxTSE_C <- numeric()
+maxTp_value_C <- numeric()
 rangeSize <- numeric()
 rangeRoundness <- numeric()
 maxLat <- numeric()
 minLat <- numeric()
-n_records <- numeric()
+
   
 ## Loop through species
 for(j in 1:length(sps_list_sel))
 {
   #skip sps with only one point
-  if(j != 28){
+  if(nrow(sps_minT_SHAP_info[[j]]) > 1){
     #list spp
     species[length(species) + 1] <- sps_list_sel[j]
     
@@ -155,16 +174,22 @@ for(j in 1:length(sps_list_sel))
     abline(lin_mod_minT, col = '#0000FF', lwd = 2)
     
     #get and plot R^2
-    r2 <- summary(lin_mod_minT)$r.squared
+    summa <- summary(lin_mod_minT)
+    r2 <- summa$r.squared
     text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
          ylim[1], 
          expression(bold(paste('R'^2*' = '), sep='')), col = '#0000FF', pos = 4)
     text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
          ylim[1] - ((ylim[2] - ylim[1]) / 300), 
          round(r2,3), col = '#0000FF', font = 2, pos = 4)
+
+    #prepare model results and populate vectors
+    summa <- as.data.frame(summa$coefficients)
     
-    #populate vector
     minTR2_RP[length(minTR2_RP) + 1] <- r2
+    minTslope_RP[length(minTslope_RP) + 1] <- summa$Estimate[2]
+    minTSE_RP[length(minTSE_RP) + 1] <- summa$`Std. Error`[2]
+    minTp_value_RP[length(minTp_value_RP) + 1] <- summa$`Pr(>|t|)`[2]
     
     #meanT
     points(sps_meanT_SHAP_info[[j]]$relPolarwardness, cont_meanT, 
@@ -175,16 +200,22 @@ for(j in 1:length(sps_list_sel))
     abline(lin_mod_meanT, col = '#800080', lwd = 2)
     
     #get and plot R^2
-    r2 <- summary(lin_mod_meanT)$r.squared
-    text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
+    summa <- summary(lin_mod_meanT)
+    r2 <- summa$r.squared
+        text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
          ylim[1] + ((ylim[2] - ylim[1]) / 22), 
          expression(bold(paste('R'^2*' = '), sep='')), col = '#800080', pos = 4)
     text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
          ylim[1] + ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
          round(r2,3), col = '#800080', font = 2, pos = 4)
     
-    #pupulate vector
+    #prepare model results and populate vectors
+    summa <- as.data.frame(summa$coefficients)
+    
     meanTR2_RP[length(meanTR2_RP) + 1] <- r2
+    meanTslope_RP[length(meanTslope_RP) + 1] <- summa$Estimate[2]
+    meanTSE_RP[length(meanTSE_RP) + 1] <- summa$`Std. Error`[2]
+    meanTp_value_RP[length(meanTp_value_RP) + 1] <- summa$`Pr(>|t|)`[2]
     
     #maxT
     points(sps_maxT_SHAP_info[[j]]$relPolarwardness, cont_maxT, 
@@ -195,7 +226,8 @@ for(j in 1:length(sps_list_sel))
     abline(lin_mod_maxT, col = '#FF0000', lwd = 2)
     
     #get and plot R^2
-    r2 <- summary(lin_mod_maxT)$r.squared
+    summa <- summary(lin_mod_maxT)
+    r2 <- summa$r.squared
     text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
          ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22), 
          expression(bold(paste('R'^2*' = '), sep='')), col = '#FF0000', pos = 4)
@@ -203,8 +235,14 @@ for(j in 1:length(sps_list_sel))
          ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
          round(r2,3), col = '#FF0000', font = 2, pos = 4)
     
-    #populate vector
+    #prepare model results and populate vectors
+    summa <- as.data.frame(summa$coefficients)
+    
     maxTR2_RP[length(maxTR2_RP) + 1] <- r2
+    maxTslope_RP[length(maxTslope_RP) + 1]  <- summa$Estimate[2]
+    maxTSE_RP[length(maxTSE_RP) + 1] <- summa$`Std. Error`[2]
+    maxTp_value_RP[length(maxTp_value_RP) + 1] <- summa$`Pr(>|t|)`[2]
+    
     
     #plot species range size and roundness
     text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5), 
@@ -265,7 +303,8 @@ for(j in 1:length(sps_list_sel))
     abline(lin_mod_minT, col = '#0000FF', lwd = 2)
     
     #get and plot R^2
-    r2 <- summary(lin_mod_minT)$r.squared
+    summa <- summary(lin_mod_minT)
+    r2 <- summa$r.squared
     text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
          ylim[1], 
          expression(bold(paste('R'^2*' = '), sep='')), col = '#0000FF', pos = 4)
@@ -273,8 +312,14 @@ for(j in 1:length(sps_list_sel))
          ylim[1] - ((ylim[2] - ylim[1]) / 300), 
          round(r2,3), col = '#0000FF', font = 2, pos = 4)
     
-    #populate vector
+    #prepare model results and populate vectors
+    summa <- as.data.frame(summa$coefficients)
+    
     minTR2_C[length(minTR2_C) + 1] <- r2
+    minTslope_C[length(minTslope_C) + 1]  <- summa$Estimate[2]
+    minTSE_C[length(minTSE_C) + 1] <- summa$`Std. Error`[2]
+    minTp_value_C[length(minTp_value_C) + 1] <- summa$`Pr(>|t|)`[2]
+  
     
     #meanT
     points(sps_meanT_SHAP_info[[j]]$centralness, cont_meanT, 
@@ -285,7 +330,8 @@ for(j in 1:length(sps_list_sel))
     abline(lin_mod_meanT, col = '#800080', lwd = 2)
     
     #get and plot R^2
-    r2 <- summary(lin_mod_meanT)$r.squared
+    summa <- summary(lin_mod_meanT)
+    r2 <- summa$r.squared
     text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
          ylim[1] + ((ylim[2] - ylim[1]) / 22), 
          expression(bold(paste('R'^2*' = '), sep='')), col = '#800080', pos = 4)
@@ -293,8 +339,14 @@ for(j in 1:length(sps_list_sel))
          ylim[1] + ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
          round(r2,3), col = '#800080', font = 2, pos = 4)
     
-    #pupulate vector
+    #prepare model results and populate vectors
+    summa <- as.data.frame(summa$coefficients)
+    
     meanTR2_C[length(meanTR2_C) + 1] <- r2
+    meanTslope_C[length(meanTslope_C) + 1]  <- summa$Estimate[2]
+    meanTSE_C[length(meanTSE_C) + 1] <- summa$`Std. Error`[2]
+    meanTp_value_C[length(meanTp_value_C) + 1] <- summa$`Pr(>|t|)`[2]
+
     
     #maxT
     points(sps_maxT_SHAP_info[[j]]$centralness, cont_maxT, 
@@ -305,7 +357,8 @@ for(j in 1:length(sps_list_sel))
     abline(lin_mod_maxT, col = '#FF0000', lwd = 2)
     
     #get and plot R^2
-    r2 <- summary(lin_mod_maxT)$r.squared
+    summa <- summary(lin_mod_maxT)
+    r2 <- summa$r.squared
     text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
          ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22), 
          expression(bold(paste('R'^2*' = '), sep='')), col = '#FF0000', pos = 4)
@@ -313,8 +366,13 @@ for(j in 1:length(sps_list_sel))
          ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
          round(r2,3), col = '#FF0000', font = 2, pos = 4)
     
-    #populate vector
+    #prepare model results and populate vectors
+    summa <- as.data.frame(summa$coefficients)
+    
     maxTR2_C[length(maxTR2_C) + 1] <- r2
+    maxTslope_C[length(maxTslope_C) + 1]  <- summa$Estimate[2]
+    maxTSE_C[length(maxTSE_C) + 1] <- summa$`Std. Error`[2]
+    maxTp_value_C[length(maxTp_value_C) + 1] <- summa$`Pr(>|t|)`[2]
     
     #plot species range size and roundness
     text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5), 
@@ -367,16 +425,36 @@ temp_all_pts <- data.frame(species = species,
                            maxLat = maxLat,
                            minLat = minLat,
                            minTR2_RP = minTR2_RP,
+                           minTslope_RP = minTslope_RP,
+                           minTSE_RP = minTSE_RP,
+                           minTp_value_RP = minTp_value_RP,
                            meanTR2_RP = meanTR2_RP, 
+                           meanTslope_RP = meanTslope_RP,
+                           meanTSE_RP = meanTSE_RP,
+                           meanTp_value_RP = meanTp_value_RP,
                            maxTR2_RP = maxTR2_RP,
+                           maxTslope_RP = maxTslope_RP,
+                           maxTSE_RP = maxTSE_RP,
+                           maxTp_value_RP = maxTp_value_RP,
                            minTR2_C = minTR2_C,
-                           meanTR2_C = meanTR2_C, 
-                           maxTR2_C = maxTR2_C)
+                           minTslope_C = minTslope_C, 
+                           minTSE_C = minTSE_C,
+                           minTp_value_C = minTp_value_C,
+                           meanTR2_C = meanTR2_C,
+                           meanTslope_C = meanTslope_C,
+                           meanTSE_C = meanTSE_C,
+                           meanTp_value_C = meanTp_value_C,
+                           maxTR2_C = maxTR2_C,
+                           maxTslope_C = maxTslope_C,
+                           maxTSE_C = maxTSE_C,
+                           maxTp_value_C = maxTp_value_C)
+
 
 #save table
 setwd(wd_tables)
 write.csv(temp_all_pts, 'Temperature_Rel_Polar_all_points.csv', row.names = F)
 
+#########. FIX CODE FOR PRECIPITATION #########
 
 ##############################################################################
 
@@ -445,22 +523,27 @@ for(j in 1:length(sps_maxPPT_pr))
 species <- character()
 n_records <- numeric()
 minPPTR2_RP <- numeric()
+minPPTslope_RP <- numeric()
 meanPPTR2_RP <- numeric()
+meanPPTslope_RP <- numeric()
 maxPPTR2_RP <- numeric()
+maxPPTslope_RP <- numeric()
 minPPTR2_C <- numeric()
+minPPTslope_C <- numeric()
 meanPPTR2_C <- numeric()
+meanPPTslope_C <- numeric()
 maxPPTR2_C <- numeric()
+maxPPTslope_C <- numeric()
 rangeSize <- numeric()
 rangeRoundness <- numeric()
 maxLat <- numeric()
 minLat <- numeric()
 
-
 ## Loop through species
 for(j in 1:length(sps_list_sel))
 {
   #skip sps with only one point
-  if(j != 28){
+  if(nrow(sps_minT_SHAP_info[[j]]) > 1){
     #list spp
     species[length(species) + 1] <- sps_list_sel[j]
     
@@ -515,6 +598,7 @@ for(j in 1:length(sps_list_sel))
     
     #populate vector
     minPPTR2_RP[length(minPPTR2_RP) + 1] <- r2
+    minPPTslope_RP[length(minPPTslope_RP) + 1] <- coefficients(lin_mod_minPPT)[2]
     
     #meanPPT
     points(sps_meanPPT_SHAP_info[[j]]$relPolarwardness, cont_meanPPT, 
@@ -535,6 +619,7 @@ for(j in 1:length(sps_list_sel))
     
     #populate vector
     meanPPTR2_RP[length(meanPPTR2_RP) + 1] <- r2
+    meanPPTslope_RP[length(meanPPTslope_RP) + 1] <- coefficients(lin_mod_meanPPT)[2]
     
     #maxPPT
     points(sps_maxPPT_SHAP_info[[j]]$relPolarwardness, cont_maxPPT, 
@@ -555,6 +640,7 @@ for(j in 1:length(sps_list_sel))
     
     #populate vector
     maxPPTR2_RP[length(maxPPTR2_RP) + 1] <- r2
+    maxPPTslope_RP[length(maxPPTslope_RP) + 1] <- coefficients(lin_mod_maxPPT)[2]
     
     #plot species range size and roundness
     text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5), 
@@ -623,8 +709,9 @@ for(j in 1:length(sps_list_sel))
          ylim[1] - ((ylim[2] - ylim[1]) / 300),
          round(r2,3), col = '#fc8d59', font = 2, pos = 4)
     
-    #pupulate vector
+    #populate vector
     minPPTR2_C[length(minPPTR2_C) + 1] <- r2
+    minPPTslope_C[length(minPPTslope_C) + 1] <- coefficients(lin_mod_minPPT)[2]
     
     #meanPPT
     points(sps_meanPPT_SHAP_info[[j]]$centralness, cont_meanPPT, 
@@ -643,8 +730,9 @@ for(j in 1:length(sps_list_sel))
          ylim[1] + ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
          round(r2,3), col = '#8c510a', font = 2, pos = 4)
     
-    #pupulate vector
+    #populate vector
     meanPPTR2_C[length(meanPPTR2_C) + 1] <- r2
+    meanPPTslope_C[length(meanPPTslope_C) + 1] <- coefficients(lin_mod_meanPPT)[2]
     
     #maxPPT
     points(sps_maxPPT_SHAP_info[[j]]$centralness, cont_maxPPT, 
@@ -663,8 +751,9 @@ for(j in 1:length(sps_list_sel))
          ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
          round(r2,3), col = '#1a9850', font = 2, pos = 4)
     
-    #pupulate vector
+    #populate vector
     maxPPTR2_C[length(maxPPTR2_C) + 1] <- r2
+    maxPPTslope_C[length(maxPPTslope_C) + 1] <- coefficients(lin_mod_maxPPT)[2]
     
     #plot species range size and roundness
     text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5), 
@@ -714,11 +803,17 @@ prec_all_pts <- data.frame(species = species,
                            maxLat = maxLat,
                            minLat = minLat,
                            minPPTR2_RP = minPPTR2_RP,
-                           meanPPTR2_RP = meanPPTR2_RP, 
+                           minPPTslope_RP = minPPTslope_RP,
+                           meanPPTR2_RP = meanPPTR2_RP,
+                           meanPPTslope_RP = meanPPTslope_RP,
                            maxPPTR2_RP = maxPPTR2_RP,
+                           maxPPTslope_RP = maxPPTslope_RP,
                            minPPTR2_C = minPPTR2_C,
+                           minPPTslope_C = minPPTslope_C,
                            meanPPTR2_C = meanPPTR2_C, 
-                           maxPPTR2_C = maxPPTR2_C)
+                           meanPPTslope_C = meanPPTslope_C,
+                           maxPPTR2_C = maxPPTR2_C,
+                           maxPPTslope_C = maxPPTslope_C)
 
 #save table
 setwd(wd_tables)
