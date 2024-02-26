@@ -454,7 +454,7 @@ temp_all_pts <- data.frame(species = species,
 setwd(wd_tables)
 write.csv(temp_all_pts, 'Temperature_Rel_Polar_all_points.csv', row.names = F)
 
-#########. FIX CODE FOR PRECIPITATION #########
+
 
 ##############################################################################
 
@@ -524,16 +524,28 @@ species <- character()
 n_records <- numeric()
 minPPTR2_RP <- numeric()
 minPPTslope_RP <- numeric()
+minPPTSE_RP <- numeric()
+minPPTp_value_RP <- numeric()
 meanPPTR2_RP <- numeric()
 meanPPTslope_RP <- numeric()
+meanPPTSE_RP <- numeric()
+meanPPTp_value_RP <- numeric()
 maxPPTR2_RP <- numeric()
 maxPPTslope_RP <- numeric()
+maxPPTSE_RP <- numeric()
+maxPPTp_value_RP <- numeric()
 minPPTR2_C <- numeric()
 minPPTslope_C <- numeric()
+minPPTSE_C <- numeric()
+minPPTp_value_C <- numeric()
 meanPPTR2_C <- numeric()
 meanPPTslope_C <- numeric()
+meanPPTSE_C <- numeric()
+meanPPTp_value_C <- numeric()
 maxPPTR2_C <- numeric()
 maxPPTslope_C <- numeric()
+maxPPTSE_C <- numeric()
+maxPPTp_value_C <- numeric()
 rangeSize <- numeric()
 rangeRoundness <- numeric()
 maxLat <- numeric()
@@ -588,7 +600,8 @@ for(j in 1:length(sps_list_sel))
     abline(lin_mod_minPPT, col = '#fc8d59', lwd = 2)
      
     #get and plot R^2
-    r2 <- summary(lin_mod_minPPT)$r.squared
+    summa <- summary(lin_mod_minPPT)
+    r2 <- summa$r.squared
     text(xlim[1] + ((xlim[2] - xlim[1]) / 25),
          ylim[1],
          expression(bold(paste('R'^2*' = '), sep='')), col = '#fc8d59', pos = 4)
@@ -596,9 +609,13 @@ for(j in 1:length(sps_list_sel))
          ylim[1] - ((ylim[2] - ylim[1]) / 300),
          round(r2,3), col = '#fc8d59', font = 2, pos = 4)
     
-    #populate vector
+    #prepare model results and populate vectors
+    summa <- as.data.frame(summa$coefficients)
+    
     minPPTR2_RP[length(minPPTR2_RP) + 1] <- r2
-    minPPTslope_RP[length(minPPTslope_RP) + 1] <- coefficients(lin_mod_minPPT)[2]
+    minPPTslope_RP[length(minPPTslope_RP) + 1]  <- summa$Estimate[2]
+    minPPTSE_RP[length(minPPTSE_RP) + 1] <- summa$`Std. Error`[2]
+    minPPTp_value_RP[length(minPPTp_value_RP) + 1] <- summa$`Pr(>|t|)`[2]
     
     #meanPPT
     points(sps_meanPPT_SHAP_info[[j]]$relPolarwardness, cont_meanPPT, 
@@ -609,7 +626,8 @@ for(j in 1:length(sps_list_sel))
     abline(lin_mod_meanPPT, col = '#8c510a', lwd = 2)
     
     #get and plot R^2
-    r2 <- summary(lin_mod_meanPPT)$r.squared
+    summa <- summary(lin_mod_meanPPT)
+    r2 <- summa$r.squared
     text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
          ylim[1] + ((ylim[2] - ylim[1]) / 22), 
          expression(bold(paste('R'^2*' = '), sep='')), col = '#8c510a', pos = 4)
@@ -617,9 +635,13 @@ for(j in 1:length(sps_list_sel))
          ylim[1] + ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
          round(r2,3), col = '#8c510a', font = 2, pos = 4)
     
-    #populate vector
+    #prepare model results and populate vectors
+    summa <- as.data.frame(summa$coefficients)
+    
     meanPPTR2_RP[length(meanPPTR2_RP) + 1] <- r2
-    meanPPTslope_RP[length(meanPPTslope_RP) + 1] <- coefficients(lin_mod_meanPPT)[2]
+    meanPPTslope_RP[length(meanPPTslope_RP) + 1]  <- summa$Estimate[2]
+    meanPPTSE_RP[length(meanPPTSE_RP) + 1] <- summa$`Std. Error`[2]
+    meanPPTp_value_RP[length(meanPPTp_value_RP) + 1] <- summa$`Pr(>|t|)`[2]
     
     #maxPPT
     points(sps_maxPPT_SHAP_info[[j]]$relPolarwardness, cont_maxPPT, 
@@ -630,7 +652,8 @@ for(j in 1:length(sps_list_sel))
     abline(lin_mod_maxPPT, col = '#1a9850', lwd = 2)
 
     #get and plot R^2
-    r2 <- summary(lin_mod_maxPPT)$r.squared
+    summa <- summary(lin_mod_maxPPT)
+    r2 <- summa$r.squared
     text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
          ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22), 
          expression(bold(paste('R'^2*' = '), sep='')), col = '#1a9850', pos = 4)
@@ -638,9 +661,13 @@ for(j in 1:length(sps_list_sel))
          ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
          round(r2,3), col = '#1a9850', font = 2, pos = 4)
     
-    #populate vector
+    #prepare model results and populate vectors
+    summa <- as.data.frame(summa$coefficients)
+    
     maxPPTR2_RP[length(maxPPTR2_RP) + 1] <- r2
-    maxPPTslope_RP[length(maxPPTslope_RP) + 1] <- coefficients(lin_mod_maxPPT)[2]
+    maxPPTslope_RP[length(maxPPTslope_RP) + 1]  <- summa$Estimate[2]
+    maxPPTSE_RP[length(maxPPTSE_RP) + 1] <- summa$`Std. Error`[2]
+    maxPPTp_value_RP[length(maxPPTp_value_RP) + 1] <- summa$`Pr(>|t|)`[2]
     
     #plot species range size and roundness
     text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5), 
@@ -701,7 +728,8 @@ for(j in 1:length(sps_list_sel))
     abline(lin_mod_minPPT, col = '#fc8d59', lwd = 2)
     
     #get and plot R^2
-    r2 <- summary(lin_mod_minPPT)$r.squared
+    summa <- summary(lin_mod_minPPT)
+    r2 <- summa$r.squared
     text(xlim[1] + ((xlim[2] - xlim[1]) / 25),
          ylim[1],
          expression(bold(paste('R'^2*' = '), sep='')), col = '#fc8d59', pos = 4)
@@ -709,9 +737,13 @@ for(j in 1:length(sps_list_sel))
          ylim[1] - ((ylim[2] - ylim[1]) / 300),
          round(r2,3), col = '#fc8d59', font = 2, pos = 4)
     
-    #populate vector
+    #prepare model results and populate vectors
+    summa <- as.data.frame(summa$coefficients)
+    
     minPPTR2_C[length(minPPTR2_C) + 1] <- r2
-    minPPTslope_C[length(minPPTslope_C) + 1] <- coefficients(lin_mod_minPPT)[2]
+    minPPTslope_C[length(minPPTslope_C) + 1]  <- summa$Estimate[2]
+    minPPTSE_C[length(minPPTSE_C) + 1] <- summa$`Std. Error`[2]
+    minPPTp_value_C[length(minPPTp_value_C) + 1] <- summa$`Pr(>|t|)`[2]
     
     #meanPPT
     points(sps_meanPPT_SHAP_info[[j]]$centralness, cont_meanPPT, 
@@ -722,7 +754,8 @@ for(j in 1:length(sps_list_sel))
     abline(lin_mod_meanPPT, col = '#8c510a', lwd = 2)
     
     #get and plot R^2
-    r2 <- summary(lin_mod_meanPPT)$r.squared
+    summa <- summary(lin_mod_meanPPT)
+    r2 <- summa$r.squared
     text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
          ylim[1] + ((ylim[2] - ylim[1]) / 22), 
          expression(bold(paste('R'^2*' = '), sep='')), col = '#8c510a', pos = 4)
@@ -730,9 +763,13 @@ for(j in 1:length(sps_list_sel))
          ylim[1] + ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
          round(r2,3), col = '#8c510a', font = 2, pos = 4)
     
-    #populate vector
+    #prepare model results and populate vectors
+    summa <- as.data.frame(summa$coefficients)
+    
     meanPPTR2_C[length(meanPPTR2_C) + 1] <- r2
-    meanPPTslope_C[length(meanPPTslope_C) + 1] <- coefficients(lin_mod_meanPPT)[2]
+    meanPPTslope_C[length(meanPPTslope_C) + 1]  <- summa$Estimate[2]
+    meanPPTSE_C[length(meanPPTSE_C) + 1] <- summa$`Std. Error`[2]
+    meanPPTp_value_C[length(meanPPTp_value_C) + 1] <- summa$`Pr(>|t|)`[2]
     
     #maxPPT
     points(sps_maxPPT_SHAP_info[[j]]$centralness, cont_maxPPT, 
@@ -743,7 +780,8 @@ for(j in 1:length(sps_list_sel))
     abline(lin_mod_maxPPT, col = '#1a9850', lwd = 2)
     
     #get and plot R^2
-    r2 <- summary(lin_mod_maxPPT)$r.squared
+    summa <- summary(lin_mod_maxPPT)
+    r2 <- summa$r.squared
     text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
          ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22), 
          expression(bold(paste('R'^2*' = '), sep='')), col = '#1a9850', pos = 4)
@@ -751,9 +789,13 @@ for(j in 1:length(sps_list_sel))
          ylim[1] + 2 * ((ylim[2] - ylim[1]) / 22) - ((ylim[2] - ylim[1]) / 300), 
          round(r2,3), col = '#1a9850', font = 2, pos = 4)
     
-    #populate vector
+    #prepare model results and populate vectors
+    summa <- as.data.frame(summa$coefficients)
+    
     maxPPTR2_C[length(maxPPTR2_C) + 1] <- r2
-    maxPPTslope_C[length(maxPPTslope_C) + 1] <- coefficients(lin_mod_maxPPT)[2]
+    maxPPTslope_C[length(maxPPTslope_C) + 1]  <- summa$Estimate[2]
+    maxPPTSE_C[length(maxPPTSE_C) + 1] <- summa$`Std. Error`[2]
+    maxPPTp_value_C[length(maxPPTp_value_C) + 1] <- summa$`Pr(>|t|)`[2]
     
     #plot species range size and roundness
     text(xlim[2] - ((xlim[2] - xlim[1]) / 4.5), 
@@ -795,6 +837,10 @@ for(j in 1:length(sps_list_sel))
   }
 }
 
+
+#### COMPLETE THE LIST BELOW
+
+
 #create a dataframe with the results for all species
 prec_all_pts <- data.frame(species = species,
                            n_records = n_records,
@@ -804,16 +850,28 @@ prec_all_pts <- data.frame(species = species,
                            minLat = minLat,
                            minPPTR2_RP = minPPTR2_RP,
                            minPPTslope_RP = minPPTslope_RP,
+                           minPPTSE_RP = minPPTSE_RP,
+                           minPPTp_value_RP = minPPTp_value_RP,
                            meanPPTR2_RP = meanPPTR2_RP,
                            meanPPTslope_RP = meanPPTslope_RP,
+                           meanPPTSE_RP = meanPPTSE_RP,
+                           meanPPTp_value_RP = meanPPTp_value_RP,
                            maxPPTR2_RP = maxPPTR2_RP,
                            maxPPTslope_RP = maxPPTslope_RP,
+                           maxPPTSE_RP = maxPPTSE_RP,
+                           maxPPTp_value_RP = maxPPTp_value_RP,
                            minPPTR2_C = minPPTR2_C,
                            minPPTslope_C = minPPTslope_C,
+                           minPPTSE_C = minPPTSE_C,
+                           minPPTp_value_C = minPPTp_value_C,
                            meanPPTR2_C = meanPPTR2_C, 
                            meanPPTslope_C = meanPPTslope_C,
+                           meanPPTSE_C = meanPPTSE_C,
+                           meanPPTp_value_C = meanPPTp_value_C,
                            maxPPTR2_C = maxPPTR2_C,
-                           maxPPTslope_C = maxPPTslope_C)
+                           maxPPTslope_C = maxPPTslope_C,
+                           maxPPTSE_C = maxPPTSE_C,
+                           maxPPTp_value_C = maxPPTp_value_C)
 
 #save table
 setwd(wd_tables)
