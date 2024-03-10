@@ -1,5 +1,4 @@
 #load libraries
-library(metafor)
 
 #list wds
 wd_tables <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Results_analyses/Each_species_all_points_posneg'
