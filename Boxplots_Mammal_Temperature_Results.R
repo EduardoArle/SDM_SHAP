@@ -1,5 +1,4 @@
 #load packages
-library(randomForest)
 
 #list wds
 wd_tables <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Results_analyses/Each_species_all_points_posneg'
@@ -11,6 +10,12 @@ res_temp <- read.csv('Temperature_Rel_Polar_all_points_order.csv')
 
 #calculate species' latitudinal amplitude
 res_temp$latAmplitude <- res_temp$maxLat - res_temp$minLat
+
+
+#################################################################
+################### RELATIVE POLARWARDNESS ######################
+#################################################################
+
 
 ############################
 ######### MIN TEMP ########
@@ -24,7 +29,7 @@ res_temp_large_ranges <- res_temp[which(res_temp$minTslope_RP != 0),]
 
 #### all amplitudes
 res_temp_large_ranges2 <- res_temp_large_ranges[which
-                                                (res_temp_large_ranges$latAmplitude >= 0),]
+                (res_temp_large_ranges$latAmplitude >= 0),]
 
 pos_latAmp_all <- sum(res_temp_large_ranges2$minTslope_RP > 0) /
   nrow(res_temp_large_ranges2) * 100
@@ -33,7 +38,7 @@ neg_latAmp_all <- sum(res_temp_large_ranges2$minTslope_RP < 0) /
 
 #### more than 5 degrees
 res_temp_large_ranges2 <- res_temp_large_ranges[which
-                                                (res_temp_large_ranges$latAmplitude >= 5),]
+               (res_temp_large_ranges$latAmplitude >= 5),]
 
 pos_latAmp_5 <- sum(res_temp_large_ranges2$minTslope_RP > 0) /
   nrow(res_temp_large_ranges2) * 100
@@ -42,7 +47,7 @@ neg_latAmp_5 <- sum(res_temp_large_ranges2$minTslope_RP < 0) /
 
 #### more than 10 degrees
 res_temp_large_ranges2 <- res_temp_large_ranges[which
-                                                (res_temp_large_ranges$latAmplitude >= 10),]
+            (res_temp_large_ranges$latAmplitude >= 10),]
 
 pos_latAmp_10 <- sum(res_temp_large_ranges2$minTslope_RP > 0) /
   nrow(res_temp_large_ranges2) * 100
@@ -51,7 +56,7 @@ neg_latAmp_10 <- sum(res_temp_large_ranges2$minTslope_RP < 0) /
 
 #### more than 15 degrees
 res_temp_large_ranges2 <- res_temp_large_ranges[which
-                                                (res_temp_large_ranges$latAmplitude >= 15),]
+              (res_temp_large_ranges$latAmplitude >= 15),]
 
 pos_latAmp_15 <- sum(res_temp_large_ranges2$minTslope_RP > 0) /
   nrow(res_temp_large_ranges2) * 100
@@ -61,7 +66,7 @@ neg_latAmp_15 <- sum(res_temp_large_ranges2$minTslope_RP < 0) /
 
 #### more than 20 degrees
 res_temp_large_ranges2 <- res_temp_large_ranges[which
-                                                (res_temp_large_ranges$latAmplitude >= 20),]
+              (res_temp_large_ranges$latAmplitude >= 20),]
 
 pos_latAmp_20 <- sum(res_temp_large_ranges2$minTslope_RP > 0) /
   nrow(res_temp_large_ranges2) * 100
@@ -998,3 +1003,470 @@ barplot(dt_maxLat,
         legend = NA)
 
 
+#################################################################
+########################## CENTRALNESS ##########################
+#################################################################
+
+
+############################
+######### MIN TEMP #########
+############################
+
+
+###### check relationships by range roundness
+
+#eliminate 0s and NAs in the slope
+res_temp_large_ranges <- res_temp[which(res_temp$minTslope_C != 0),]
+
+#### all roundness
+res_temp_large_ranges2 <- res_temp_large_ranges[which
+              (res_temp_large_ranges$rangeRoundness >= 0),]
+
+pos_round_all <- sum(res_temp_large_ranges2$minTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_round_all <- sum(res_temp_large_ranges2$minTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 0.2
+res_temp_large_ranges2 <- res_temp_large_ranges[which
+              (res_temp_large_ranges$rangeRoundness >= 0.2),]
+
+pos_round_02 <- sum(res_temp_large_ranges2$minTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_round_02 <- sum(res_temp_large_ranges2$minTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 0.4
+res_temp_large_ranges2 <- res_temp_large_ranges[which
+           (res_temp_large_ranges$rangeRoundness >= 0.4),]
+
+pos_round_04 <- sum(res_temp_large_ranges2$minTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_round_04 <- sum(res_temp_large_ranges2$minTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 0.6
+res_temp_large_ranges2 <- res_temp_large_ranges[which
+            (res_temp_large_ranges$rangeRoundness >= 0.6),]
+
+pos_round_06 <- sum(res_temp_large_ranges2$minTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_round_06 <- sum(res_temp_large_ranges2$minTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+
+#### more than 0.8
+res_temp_large_ranges2 <- res_temp_large_ranges[which
+            (res_temp_large_ranges$rangeRoundness >= 0.8),]
+
+pos_round_08 <- sum(res_temp_large_ranges2$minTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_round_08 <- sum(res_temp_large_ranges2$minTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+
+dt_round <- data.frame(all = c(pos_latAmp_all, neg_latAmp_all),
+                        min_02 = c(pos_round_02, neg_round_02),
+                        min_04 = c(pos_round_04, neg_round_04),
+                        min_06 = c(pos_round_06, neg_round_06),
+                        min_08 = c(pos_round_08, neg_round_08))
+
+row.names(dt_round) <- c('Positive', 'Negative')
+
+dt_round <-as.matrix(dt_round)    
+
+
+barplot(dt_round,
+        col = c("blue", "red"),
+        legend = NA)
+
+
+#save boxplot in /Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Plots/Plots_all_species/Box_plots
+
+###### check relationships by range size
+
+#eliminate 0s and NAs in the slope
+res_temp_large_ranges <- res_temp[which(res_temp$minTslope_C != 0),]
+
+#### all amplitudes
+res_temp_large_ranges2 <- res_temp_large_ranges[
+  which(res_temp_large_ranges$rangeSize >= 0),]
+
+pos_rangeSize_all <- sum(res_temp_large_ranges2$minTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_rangeSize_all <- sum(res_temp_large_ranges2$minTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 100000 km2
+res_temp_large_ranges2 <- res_temp_large_ranges[
+  which(res_temp_large_ranges$rangeSize >= 100000),]
+
+pos_rangeSize_100000 <- sum(res_temp_large_ranges2$minTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_rangeSize_100000 <- sum(res_temp_large_ranges2$minTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 500000 km2
+res_temp_large_ranges2 <- res_temp_large_ranges[
+  which(res_temp_large_ranges$rangeSize >= 500000),]
+
+pos_rangeSize_500000 <- sum(res_temp_large_ranges2$minTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_rangeSize_500000 <- sum(res_temp_large_ranges2$minTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 1000000 km2
+res_temp_large_ranges2 <- res_temp_large_ranges[
+  which(res_temp_large_ranges$rangeSize >= 1000000),]
+
+pos_rangeSize_1000000 <- sum(res_temp_large_ranges2$minTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_rangeSize_1000000 <- sum(res_temp_large_ranges2$minTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 2000000 km2
+res_temp_large_ranges2 <- res_temp_large_ranges[
+  which(res_temp_large_ranges$rangeSize >= 2000000),]
+
+pos_rangeSize_2000000 <- sum(res_temp_large_ranges2$minTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_rangeSize_2000000 <- sum(res_temp_large_ranges2$minTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 3000000 km2
+res_temp_large_ranges2 <- res_temp_large_ranges[
+  which(res_temp_large_ranges$rangeSize >= 3000000),]
+
+pos_rangeSize_3000000 <- sum(res_temp_large_ranges2$minTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_rangeSize_3000000 <- sum(res_temp_large_ranges2$minTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+
+dt_rangeSize <- data.frame(all = c(pos_rangeSize_all, neg_rangeSize_all),
+                min_100K = c(pos_rangeSize_100000, neg_rangeSize_100000),
+                min_500K = c(pos_rangeSize_500000, neg_rangeSize_500000),
+                min_1000K = c(pos_rangeSize_1000000, neg_rangeSize_1000000),
+                min_2000K = c(pos_rangeSize_2000000, neg_rangeSize_2000000),
+                min_3000K = c(pos_rangeSize_3000000, neg_rangeSize_3000000))
+
+row.names(dt_rangeSize) <- c('Positive', 'Negative')
+
+dt_rangeSize <-as.matrix(dt_rangeSize)    
+
+
+barplot(dt_rangeSize,
+        col = c("blue", "red"),
+        legend = NA)
+
+#save boxplot in /Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Plots/Plots_all_species/Box_plots
+
+
+
+############################
+######### MEAN TEMP ########
+############################
+
+
+###### check relationships by range roundness
+
+#eliminate 0s and NAs in the slope
+res_temp_large_ranges <- res_temp[which(res_temp$meanTslope_C != 0),]
+
+#### all roundness
+res_temp_large_ranges2 <- res_temp_large_ranges[which
+           (res_temp_large_ranges$rangeRoundness >= 0),]
+
+pos_round_all <- sum(res_temp_large_ranges2$meanTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_round_all <- sum(res_temp_large_ranges2$meanTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 0.2
+res_temp_large_ranges2 <- res_temp_large_ranges[which
+         (res_temp_large_ranges$rangeRoundness >= 0.2),]
+
+pos_round_02 <- sum(res_temp_large_ranges2$meanTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_round_02 <- sum(res_temp_large_ranges2$meanTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 0.4
+res_temp_large_ranges2 <- res_temp_large_ranges[which
+          (res_temp_large_ranges$rangeRoundness >= 0.4),]
+
+pos_round_04 <- sum(res_temp_large_ranges2$meanTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_round_04 <- sum(res_temp_large_ranges2$meanTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 0.6
+res_temp_large_ranges2 <- res_temp_large_ranges[which
+         (res_temp_large_ranges$rangeRoundness >= 0.6),]
+
+pos_round_06 <- sum(res_temp_large_ranges2$meanTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_round_06 <- sum(res_temp_large_ranges2$meanTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+
+#### more than 0.8
+res_temp_large_ranges2 <- res_temp_large_ranges[which
+        (res_temp_large_ranges$rangeRoundness >= 0.8),]
+
+pos_round_08 <- sum(res_temp_large_ranges2$meanTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_round_08 <- sum(res_temp_large_ranges2$meanTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+
+dt_round <- data.frame(all = c(pos_latAmp_all, neg_latAmp_all),
+                       min_02 = c(pos_round_02, neg_round_02),
+                       min_04 = c(pos_round_04, neg_round_04),
+                       min_06 = c(pos_round_06, neg_round_06),
+                       min_08 = c(pos_round_08, neg_round_08))
+
+row.names(dt_round) <- c('Positive', 'Negative')
+
+dt_round <-as.matrix(dt_round)    
+
+
+barplot(dt_round,
+        col = c("blue", "red"),
+        legend = NA)
+
+
+#save boxplot in /Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Plots/Plots_all_species/Box_plots
+
+###### check relationships by range size
+
+#eliminate 0s and NAs in the slope
+res_temp_large_ranges <- res_temp[which(res_temp$meanTslope_C != 0),]
+
+#### all range sizes
+res_temp_large_ranges2 <- res_temp_large_ranges[
+  which(res_temp_large_ranges$rangeSize >= 0),]
+
+pos_rangeSize_all <- sum(res_temp_large_ranges2$meanTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_rangeSize_all <- sum(res_temp_large_ranges2$meanTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 100000 km2
+res_temp_large_ranges2 <- res_temp_large_ranges[
+  which(res_temp_large_ranges$rangeSize >= 100000),]
+
+pos_rangeSize_100000 <- sum(res_temp_large_ranges2$meanTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_rangeSize_100000 <- sum(res_temp_large_ranges2$meanTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 500000 km2
+res_temp_large_ranges2 <- res_temp_large_ranges[
+  which(res_temp_large_ranges$rangeSize >= 500000),]
+
+pos_rangeSize_500000 <- sum(res_temp_large_ranges2$meanTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_rangeSize_500000 <- sum(res_temp_large_ranges2$meanTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 1000000 km2
+res_temp_large_ranges2 <- res_temp_large_ranges[
+  which(res_temp_large_ranges$rangeSize >= 1000000),]
+
+pos_rangeSize_1000000 <- sum(res_temp_large_ranges2$meanTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_rangeSize_1000000 <- sum(res_temp_large_ranges2$meanTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 2000000 km2
+res_temp_large_ranges2 <- res_temp_large_ranges[
+  which(res_temp_large_ranges$rangeSize >= 2000000),]
+
+pos_rangeSize_2000000 <- sum(res_temp_large_ranges2$meanTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_rangeSize_2000000 <- sum(res_temp_large_ranges2$meanTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 3000000 km2
+res_temp_large_ranges2 <- res_temp_large_ranges[
+  which(res_temp_large_ranges$rangeSize >= 3000000),]
+
+pos_rangeSize_3000000 <- sum(res_temp_large_ranges2$meanTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_rangeSize_3000000 <- sum(res_temp_large_ranges2$meanTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+
+dt_rangeSize <- data.frame(all = c(pos_rangeSize_all, neg_rangeSize_all),
+                  min_100K = c(pos_rangeSize_100000, neg_rangeSize_100000),
+                  min_500K = c(pos_rangeSize_500000, neg_rangeSize_500000),
+                  min_1000K = c(pos_rangeSize_1000000, neg_rangeSize_1000000),
+                  min_2000K = c(pos_rangeSize_2000000, neg_rangeSize_2000000),
+                  min_3000K = c(pos_rangeSize_3000000, neg_rangeSize_3000000))
+
+row.names(dt_rangeSize) <- c('Positive', 'Negative')
+
+dt_rangeSize <-as.matrix(dt_rangeSize)    
+
+
+barplot(dt_rangeSize,
+        col = c("blue", "red"),
+        legend = NA)
+
+#save boxplot in /Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Plots/Plots_all_species/Box_plots
+
+
+
+############################
+######### MAX TEMP #########
+############################
+
+
+###### check relationships by range roundness
+
+#eliminate 0s and NAs in the slope
+res_temp_large_ranges <- res_temp[which(res_temp$maxTslope_C != 0),]
+
+#### all roundness
+res_temp_large_ranges2 <- res_temp_large_ranges[which
+        (res_temp_large_ranges$rangeRoundness >= 0),]
+
+pos_round_all <- sum(res_temp_large_ranges2$maxTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_round_all <- sum(res_temp_large_ranges2$maxTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 0.2
+res_temp_large_ranges2 <- res_temp_large_ranges[which
+         (res_temp_large_ranges$rangeRoundness >= 0.2),]
+
+pos_round_02 <- sum(res_temp_large_ranges2$maxTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_round_02 <- sum(res_temp_large_ranges2$maxTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 0.4
+res_temp_large_ranges2 <- res_temp_large_ranges[which
+        (res_temp_large_ranges$rangeRoundness >= 0.4),]
+
+pos_round_04 <- sum(res_temp_large_ranges2$maxTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_round_04 <- sum(res_temp_large_ranges2$maxTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 0.6
+res_temp_large_ranges2 <- res_temp_large_ranges[which
+        (res_temp_large_ranges$rangeRoundness >= 0.6),]
+
+pos_round_06 <- sum(res_temp_large_ranges2$maxTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_round_06 <- sum(res_temp_large_ranges2$maxTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+
+#### more than 0.8
+res_temp_large_ranges2 <- res_temp_large_ranges[which
+          (res_temp_large_ranges$rangeRoundness >= 0.8),]
+
+pos_round_08 <- sum(res_temp_large_ranges2$maxTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_round_08 <- sum(res_temp_large_ranges2$maxTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+
+dt_round <- data.frame(all = c(pos_latAmp_all, neg_latAmp_all),
+                       min_02 = c(pos_round_02, neg_round_02),
+                       min_04 = c(pos_round_04, neg_round_04),
+                       min_06 = c(pos_round_06, neg_round_06),
+                       min_08 = c(pos_round_08, neg_round_08))
+
+row.names(dt_round) <- c('Positive', 'Negative')
+
+dt_round <-as.matrix(dt_round)    
+
+
+barplot(dt_round,
+        col = c("blue", "red"),
+        legend = NA)
+
+
+#save boxplot in /Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Plots/Plots_all_species/Box_plots
+
+###### check relationships by range size
+
+#eliminate 0s and NAs in the slope
+res_temp_large_ranges <- res_temp[which(res_temp$maxTslope_C != 0),]
+
+#### all range sizes
+res_temp_large_ranges2 <- res_temp_large_ranges[
+  which(res_temp_large_ranges$rangeSize >= 0),]
+
+pos_rangeSize_all <- sum(res_temp_large_ranges2$maxTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_rangeSize_all <- sum(res_temp_large_ranges2$maxTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 100000 km2
+res_temp_large_ranges2 <- res_temp_large_ranges[
+  which(res_temp_large_ranges$rangeSize >= 100000),]
+
+pos_rangeSize_100000 <- sum(res_temp_large_ranges2$maxTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_rangeSize_100000 <- sum(res_temp_large_ranges2$maxTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 500000 km2
+res_temp_large_ranges2 <- res_temp_large_ranges[
+  which(res_temp_large_ranges$rangeSize >= 500000),]
+
+pos_rangeSize_500000 <- sum(res_temp_large_ranges2$maxTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_rangeSize_500000 <- sum(res_temp_large_ranges2$maxTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 1000000 km2
+res_temp_large_ranges2 <- res_temp_large_ranges[
+  which(res_temp_large_ranges$rangeSize >= 1000000),]
+
+pos_rangeSize_1000000 <- sum(res_temp_large_ranges2$maxTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_rangeSize_1000000 <- sum(res_temp_large_ranges2$maxTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 2000000 km2
+res_temp_large_ranges2 <- res_temp_large_ranges[
+  which(res_temp_large_ranges$rangeSize >= 2000000),]
+
+pos_rangeSize_2000000 <- sum(res_temp_large_ranges2$maxTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_rangeSize_2000000 <- sum(res_temp_large_ranges2$maxTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+#### more than 3000000 km2
+res_temp_large_ranges2 <- res_temp_large_ranges[
+  which(res_temp_large_ranges$rangeSize >= 3000000),]
+
+pos_rangeSize_3000000 <- sum(res_temp_large_ranges2$maxTslope_C > 0) /
+  nrow(res_temp_large_ranges2) * 100
+neg_rangeSize_3000000 <- sum(res_temp_large_ranges2$maxTslope_C < 0) /
+  nrow(res_temp_large_ranges2) * 100
+
+
+dt_rangeSize <- data.frame(all = c(pos_rangeSize_all, neg_rangeSize_all),
+                  min_100K = c(pos_rangeSize_100000, neg_rangeSize_100000),
+                  min_500K = c(pos_rangeSize_500000, neg_rangeSize_500000),
+                  min_1000K = c(pos_rangeSize_1000000, neg_rangeSize_1000000),
+                  min_2000K = c(pos_rangeSize_2000000, neg_rangeSize_2000000),
+                  min_3000K = c(pos_rangeSize_3000000, neg_rangeSize_3000000))
+
+row.names(dt_rangeSize) <- c('Positive', 'Negative')
+
+dt_rangeSize <-as.matrix(dt_rangeSize)    
+
+
+barplot(dt_rangeSize,
+        col = c("blue", "red"),
+        legend = NA)
+
+#save boxplot in /Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Plots/Plots_all_species/Box_plots
