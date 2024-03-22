@@ -1,4 +1,4 @@
-####  This script calculates five measurements to classify the points and interpret
+####  This script calculates measurements to classify the points and interpret
 ####  the results:
 ####
 ####  1 - Range size for each species *numeric area km^2
@@ -10,6 +10,10 @@
 ####  4 - Absolute polarwardness of each point (dist from equator) *numeric %
 ####
 ####  5 - Relative polarwardness of each point (dist from warm edge) *gradient
+####
+####  6 - Distance from range edges of each point *numeric km
+####
+####  7 - Elevation of each point *numeric m
 
 #load libraries
 library(sf); library(units); library(raster)
@@ -19,7 +23,7 @@ wd_ranges <- "/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Range
 wd_thinned_occ <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Thinned_occurrrences'
 wd_pts_measure <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Point_and_range_measurements'
 
-#list species 
+#list species
 setwd(wd_thinned_occ)
 sps_list <- gsub('_thinned.csv', '', list.files())
 
@@ -99,6 +103,9 @@ for(i in 1:length(sps_list))
   
   #calculate the centralness (dist point to edge / max dist to edge)
   pr_sps2$centralness <- as.numeric(st_distance(pr_sps2_sf, range_cut) / max_dist)
+  
+  #calculate the dist from each point to edge in km
+  pr_sps2$distEdge <- set_units(st_distance(pr_sps2_sf, range_cut), km)
   
   ### Calculate the absolute polarwardness of each point
   pr_sps2$absPolarwardness <- abs(pr_sps2$decimalLatitude) / 90
