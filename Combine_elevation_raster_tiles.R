@@ -19,9 +19,19 @@ untar(tar_objs[5]) #rename
 tiles <- lapply(list.files(pattern = '.tif'), raster)
 
 #extend all rasters
-tiles_extended <- lapply(tiles, function(x){
-  extend(x, extent(-180, 180, -90, 90), value = 0)
-})
+tiles_extended <- list()
+for(i in 1:length(tiles))
+{
+  tiles_extended[[i]] <- extend(tiles[[i]],
+                                extent(-180, 180, -90, 90),
+                                value = 0)
+  
+  writeRaster(tiles_extended[[i]],
+              filename = paste0('extended_SRTM15Plus_tile',i,'.tif'),
+              format = "GTiff")
+  
+  print(i)
+}
 
 #stack all rasters
 tiles_stack <- stack(tiles_extended)
