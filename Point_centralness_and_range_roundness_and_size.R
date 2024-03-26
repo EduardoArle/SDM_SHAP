@@ -22,6 +22,11 @@ library(sf); library(units); library(raster)
 wd_ranges <- "/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Range_maps"
 wd_thinned_occ <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Thinned_occurrrences'
 wd_pts_measure <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Point_and_range_measurements'
+wd_elevation <- '/Users/carloseduardoaribeiro/Documents/Post-doc/Variable layes/Elevation_Tozer'
+
+#load elevation raster
+setwd(wd_elevation)
+elev <- raster('SRTM15Plus_world.tif')
 
 #list species
 setwd(wd_thinned_occ)
@@ -104,8 +109,8 @@ for(i in 1:length(sps_list))
   #calculate the centralness (dist point to edge / max dist to edge)
   pr_sps2$centralness <- as.numeric(st_distance(pr_sps2_sf, range_cut) / max_dist)
   
-  #calculate the dist from each point to edge in km
-  pr_sps2$distEdge <- set_units(st_distance(pr_sps2_sf, range_cut), km)
+  ### Calculate the dist from each point to edge in km
+  pr_sps2$distEdge <- set_units(st_distance(pr_sps2_sf, range_cut), km)[,1]
   
   ### Calculate the absolute polarwardness of each point
   pr_sps2$absPolarwardness <- abs(pr_sps2$decimalLatitude) / 90
@@ -136,6 +141,9 @@ for(i in 1:length(sps_list))
   #calculate relative distance from warm edge
   pr_sps2$relPolarwardness <- 
            1-((abs(cold_edge) - abs(pr_sps2$decimalLatitude)) / lat_range)
+  
+  ### Extract the elevation of each point
+  pr_sps2$elevation <- extract(elev, pr_sps2_sf)
          
   #save table
   setwd(wd_pts_measure)

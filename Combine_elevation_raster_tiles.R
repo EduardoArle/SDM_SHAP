@@ -2,6 +2,7 @@ library(raster)
 
 #list WDs
 wd_input <- '/Users/carloseduardoaribeiro/Documents/Post-doc/Variable layes/Elevation_Tozer/Tiles'
+wd_output <- '/Users/carloseduardoaribeiro/Documents/Post-doc/Variable layes/Elevation_Tozer'
 
 #list objects representing tiles of elevation
 setwd(wd_input)
@@ -38,3 +39,10 @@ tiles_stack <- stack(tiles_extended)
 
 #make one raster for the whole world
 elevation_world <- sum(tiles_stack)
+
+#save world elevation raster
+setwd(wd_output)
+writeRaster(elevation_world,
+            filename = 'SRTM15Plus_world.tif',
+            format = "GTiff")
+
