@@ -153,14 +153,15 @@ for(j in 1:length(sps_list_sel))
     #### TEST #### change wd after
     #setwd(wd_res)
     setwd(wd_sps)
-    pdf(file = paste0(gsub(' ', '_', sps_list_sel[j]),'_Temperature_RelPolarness.pdf'))
+    pdf(file = paste0(gsub(' ', '_', 
+                           sps_list_sel[j]),'_Temperature_RelPolarness.pdf'))
     
     #set parametres for plotting
     par(mar = c(5,5,5,5))
     
     #get y and x lims
     ylim <- range(c(cont_minT, cont_meanT, cont_maxT))
-    xlim <- range(sps_minT_SHAP_info[[j]]$relPolarwardness) #does not matter which I use
+    xlim <- range(sps_minT_SHAP_info[[j]]$relPolarwardness) #no matter which
     
     #minT
     plot(sps_minT_SHAP_info[[j]]$relPolarwardness, cont_minT, 
@@ -178,7 +179,8 @@ for(j in 1:length(sps_list_sel))
     r2 <- summa$r.squared
     text(xlim[1] + ((xlim[2] - xlim[1]) / 25), 
          ylim[1], 
-         expression(bold(paste('R'^2*' = '), sep='')), col = '#0000FF', pos = 4)
+         expression(bold(paste('R'^2*' = '), sep='')),
+         col = '#0000FF', pos = 4)
     text(xlim[1] + ((xlim[2] - xlim[1]) / 8),
          ylim[1] - ((ylim[2] - ylim[1]) / 300), 
          round(r2,3), col = '#0000FF', font = 2, pos = 4)

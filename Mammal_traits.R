@@ -15,6 +15,9 @@ names(tab) <- c('Region', 'Status', 'Order', 'Family', 'Genus', 'Epithet',
 #substitute values from -999 to NA
 tab[tab[] == -999] <- NA
 
+#make a column with the species name
+tab$Species <- paste0(tab$Genus, ' ', tab$Epithet)
+
 #save as csv
 write.csv(tab, 'Mammals_bodymass_Smmith_2003.csv', row.names = F)
 

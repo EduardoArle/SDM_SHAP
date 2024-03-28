@@ -14,6 +14,10 @@
 ####  6 - Distance from range edges of each point *numeric km
 ####
 ####  7 - Elevation of each point *numeric m
+####
+####  8 - Body mass for each species *numeric g
+####
+####  9 - Biome for each point
 
 #load libraries
 library(sf); library(units); library(raster)
@@ -23,10 +27,19 @@ wd_ranges <- "/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Range
 wd_thinned_occ <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Thinned_occurrrences'
 wd_pts_measure <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Results/Point_and_range_measurements'
 wd_elevation <- '/Users/carloseduardoaribeiro/Documents/Post-doc/Variable layes/Elevation_Tozer'
+wd_mass <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Mammal_trait_data/Smith_etal_2003_Ecology'
+wd_biomes <- '/Users/carloseduardoaribeiro/Documents/General data/Biomes/official'
 
 #load elevation raster
 setwd(wd_elevation)
 elev <- raster('SRTM15Plus_world.tif')
+
+#load biomes shapefile
+biomes <- st_read(dsn = wd_biomes, layer = 'wwf_terr_ecos')
+
+#load mammal body mass table
+setwd(wd_mass)
+mass <- read.csv('Mammals_bodymass_Smmith_2003.csv')
 
 #list species
 setwd(wd_thinned_occ)
@@ -34,7 +47,7 @@ sps_list <- gsub('_thinned.csv', '', list.files())
 
 ######## Get measurements for all species ######
 
-for(i in 1:length(sps_list))
+for(i in 16:length(sps_list))
 {
   #select species
   sps <- sps_list[i]
@@ -144,7 +157,32 @@ for(i in 1:length(sps_list))
   
   ### Extract the elevation of each point
   pr_sps2$elevation <- extract(elev, pr_sps2_sf)
+  
+  ### Extract the biome info of each point
+  
+  #change projections to cope with edge problem
+  pr_sps3_sf <-  st_transform(pr_sps2_sf, crs = 3857) 
+  biomes2 <- st_transform(biomes, crs = 3857) 
+  
+  #extract the biome info
+  biomes_sps <- st_intersection(biomes2, pr_sps3_sf)
+  pr_sps2$biome <- biomes_sps$BIOME
          
+  ### Get average body mass for the species
+  if(sps_list[i] %in% mass$Species){
+    if(length(unique(
+                  mass$BodyMass[which(mass$Species == sps_list[i])])) == 1){
+      pr_sps2$bodyMass <- 
+        unique(mass$BodyMass[which(mass$Species == sps_list[i])])
+    }else{
+      pr_sps2$bodyMass <- mass$BodyMass[which(mass$Species == sps_list[i])]
+    }
+  }else{
+    pr_sps2$bodyMass <- NA
+  }
+  
+  t <- mass[which(mass$Species == sps_list[i]),]
+  
   #save table
   setwd(wd_pts_measure)
   write.csv(pr_sps2, paste0(sps,'_point_range_metrics.csv'), row.names = F)
