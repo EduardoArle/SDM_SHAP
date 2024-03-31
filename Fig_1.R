@@ -8,17 +8,20 @@
 ##### PLOT GRAPH ######
 
 #create data for plot
-varContr <- c(rnorm(10, mean = 1, sd = 2),
-              rnorm(10, mean = 2, sd = 2),
-              rnorm(10, mean = 3, sd = 2),
-              rnorm(10, mean = 4, sd = 2),
-              rnorm(10, mean = 5, sd = 2))
+varContr <- c(rnorm(10, mean = 0, sd = 0.2),
+              rnorm(10, mean = 0.2, sd = 0.2),
+              rnorm(10, mean = 0.3, sd = 0.2),
+              rnorm(10, mean = 0.4, sd = 0.2),
+              rnorm(10, mean = 0.5, sd = 0.2))
 
 relPolewardness <- c(1:50 / 50)
 
 #set y and x lims
-ylim <- c(-2, 5)
+ylim <- c(-0.2, 0.5)
 xlim <- c(0, 1)
+
+#set parametres for plotting
+par(mar = c(5,5,5,5), pty="s")
 
 #minT
 plot(relPolewardness, varContr, 
@@ -29,14 +32,13 @@ plot(relPolewardness, varContr,
 
 #fit linear model
 lin_mod_minT <- lm(varContr ~ relPolewardness)
-abline(lin_mod_minT, col = '#0000FF', lwd = 2)
+abline(lin_mod_minT, col = '#0000FF', lwd = 3)
 
 
 summa <- summary(lin_mod_minT)
 r2 <- summa$r.squared
+r2
 
-#set parametres for plotting
-par(mar = c(5,5,5,5))
 
 
 
