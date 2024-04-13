@@ -1,5 +1,5 @@
 #load packages
-library(rnaturalearth)
+library(rnaturalearth); library(sf)
 
 #list wds
 wd_tables <- '/Users/carloseduardoaribeiro/Documents/Post-doc/SHAP/Mammals/Manuscript/Figures/Fig 1/Things for the figure'
@@ -35,7 +35,7 @@ poly = st_polygon(
              c(10,11,13,13,15,15,17,18,23,26,29,30,
                26,23,14,12,10,09,08,05,07,08,10))))
 
-poly_sf <-  st_sfc(poly, crs = crs(world))
+poly_sf <-  st_sfc(poly, crs = st_crs(world))
 
 #create points representing species occurrences
 lat <- (relPolewardness * (st_bbox(poly_sf)$ymax - st_bbox(poly_sf)$ymin)) +
@@ -47,7 +47,7 @@ lon <- runif(n = 50,
 
 coords <- as.data.frame(cbind(lon, lat))
 
-points_sf <- st_as_sf(coords, coords = c('lon', 'lat'), crs = crs(world))
+points_sf <- st_as_sf(coords, coords = c('lon', 'lat'), crs = st_crs(world))
 
 #check one by one and put the ones out inside of the range
 #I know, not a smart not efficient solution. but it gives me pleasure.
@@ -76,7 +76,7 @@ lon[47] <- lon[47] - 5
 
 coords <- as.data.frame(cbind(lon, lat))
 
-points_sf <- st_as_sf(coords, coords = c('lon', 'lat'), crs = crs(world))
+points_sf <- st_as_sf(coords, coords = c('lon', 'lat'), crs = st_crs(world))
 
 
 plot(points_sf[1,], add = T, pch = 19, cex = 0.8, col = '#FF0000')
@@ -133,74 +133,196 @@ plot(points_sf[50,], add = T, pch = 19, cex = 0.8, col = '#FF0000')
 
 ########################
 
-#save new coordinates
+#save new coordinates for the map
 setwd(wd_tables)
 write.csv(coords, 'Coordinates_points_large_map.csv', row.names = F)
 
+#######################################################
+######################## LOAD #########################
+#######################################################
+
+#load the coordinations when runinf from here
+setwd(wd_tables)
+coords <- read.csv('Coordinates_points_large_map.csv')
+
+#create a points_sf object with the modified longitutes
+points_sf_2 <- st_as_sf(coords, coords = c('lon', 'lat'), crs = st_crs(world))
+points_sf_2$edgeDist <- st_distance()
+
+
+##### Calculate distance from the edges to show the 'centralness'
+
+
+##### Steps to prepare for plotting
+
 #make boxes for the map
 
-#make a box around the range
-ext <- st_bbox(poly_sf)  #get min and max coord values of the range
+#get min and max coord values of the range
+ext <- st_bbox(poly_sf)  
 
-x_mar <- abs(ext[3] - ext[1]) / 3 #get the values for the margin around the box
-y_mar <- abs(ext[4] - ext[2]) / 3
+#calculate the size of the small box to plot around the range
+side_box <-  max(c(abs(ext[3] - ext[1]), abs(ext[4] - ext[2]))) +
+  min(c(abs(ext[3] - ext[1]), abs(ext[4] - ext[2]))) / 4
 
-box_df <- data.frame(x = ext[c(1,3,3,1,1)] + x_mar * c(-1,1,1,-1,-1), 
-                     y = ext[c(4,4,2,2,4)] + y_mar * c(1,1,-1,-1,1))
+#calculate central lon and central lat of the range
+central_x <- (ext[3] + ext[1]) / 2
+names(central_x) <- 'xmean'
+central_y <- (ext[4] + ext[2]) / 2
+names(central_y) <- 'ymean'
+
+#calculate min and max lon and mean and max lat of the small box
+min_x <- central_x - (side_box / 2)
+names(min_x) <- 'xmin'
+max_x <- central_x + (side_box / 2)
+names(max_x) <- 'xmax'
+
+min_y <- central_y - (side_box / 2)
+names(min_y) <- 'ymin'
+max_y <- central_y + (side_box / 2)
+names(max_y) <- 'ymax'
+                          
+#create big box
+box_df <- data.frame(x = c(min_x,max_x,max_x,min_x,min_x), 
+                     y = c(max_y,max_y,min_y,min_y,max_y))
 
 box <- st_as_sfc(          #make the box    
-  st_bbox(st_as_sf(box_df, coords = c('x', 'y'), crs = crs(poly_sf))))
+  st_bbox(st_as_sf(box_df, coords = c('x', 'y'), crs = st_crs(poly_sf))))
 
-#make a larger box around the box
-ext <- st_bbox(poly_sf)  #get min and max coord values of the range
+#calculate the size of the box to plot in white in the background and give
+#space to other stuff
+side_big_box <-  max(c(abs(ext[3] - ext[1]), abs(ext[4] - ext[2]))) +
+  min(c(abs(ext[3] - ext[1]), abs(ext[4] - ext[2]))) / 2
 
-x_mar <- abs(ext[3] - ext[1]) / 1.4 
-y_mar <- abs(ext[4] - ext[2]) / 1.4
+#calculate min and max lon and mean and max lat of the big box
+min_x_BB <- central_x - (side_big_box / 1.4)
+names(min_x_BB) <- 'xmin'
+max_x_BB <- central_x + (side_big_box / 2)
+names(max_x_BB) <- 'xmax'
 
-big_box_df <- data.frame(x = ext[c(1,3,3,1,1)] + x_mar * c(-1,1,1,-1,-1), 
-                     y = ext[c(4,4,2,2,4)] + y_mar * c(1,1,-1,-1,1))
+min_y_BB <- central_y - (side_big_box / 2)
+names(min_y_BB) <- 'ymin'
+max_y_BB <- central_y + (side_big_box / 2)
+names(max_y_BB) <- 'ymax'
+
+#create big box
+big_box_df <- data.frame(x = c(min_x_BB,max_x_BB,max_x_BB,min_x_BB,min_x_BB), 
+                     y = c(max_y_BB,max_y_BB,min_y_BB,min_y_BB,max_y_BB))
 
 big_box <- st_as_sfc(          #make the box    
-  st_bbox(st_as_sf(big_box_df, coords = c('x', 'y'), crs = crs(poly_sf))))
+  st_bbox(st_as_sf(big_box_df, coords = c('x', 'y'), crs = st_crs(poly_sf))))
 
 
-###### PLOT ######
+###### PLOT GRAPH SHOWING THE LATITUDINAL GRADIENT ######
 
 
 #include variable contribution info in the attribute table
-points_sf$varContr <- varContr
+points_sf_2$varContr <- varContr
 
 #normalize variable contribution from 0 to 5 (for size)
-points_sf$varContrNormal <- 
+points_sf_2$varContrNormal <- 
   round(((varContr + abs(min(varContr))) * 2) + 0.7, 2)
 
 #set parametres for plotting
-par(mar = c(4,4,4,4), pty="s", mfrow = c(1,1))
+par(mar = c(5,5,5,5), pty="s", mfrow = c(1,1))
 
 #minT
 plot(relPolewardness, varContr, 
-     pch = 19, cex = 0.8, col = '#0000FF25',
+     pch = 19, cex = 2.4, col = '#0000FF50',
      ylab = 'Temperature contribution',
      xlab = 'Relative polarwardness',
+     cex.lab = 2.4,
+     cex.axis = 2.4,
      ylim = c(ylim[1], ylim[2]))
 
 #fit linear model
 lin_mod_minT <- lm(varContr ~ relPolewardness)
-abline(lin_mod_minT, col = '#0000FF', lwd = 3)
+abline(lin_mod_minT, col = '#0000FF', lwd = 14)
 
+#save plot (width = 1500)
+
+###### PLOT MAP SHOWING THE LATITUDINAL GRADIENT ######
 
 #set parametres for plotting
 par(mar = c(0,0,0,0), pty="s", mfrow = c(1,1))
 
-#plot map
+#plot big white box to make room for the things I need to add around
 plot(big_box, border = NA)
+
+#plot small box to inform the coordinates
 plot(box, add = T)
+
+#plot the polygon
 plot(poly_sf, lwd = 3, border = '#707070', col = '#F0F0F0', add = T)
-plot(st_geometry(points_sf),
-     add = T, pch = 19, cex = points_sf$varContrNormal,
+
+#plot the occurrence points (size is proportional to SHAP value)
+plot(st_geometry(points_sf_2),
+     add = T, pch = 19, cex = points_sf_2$varContrNormal,
      col = '#0000FF80')
-text(-9, 18, 'Longitude', srt = 90)
-points((st_bbox(box)[1] + st_bbox(box)[3])/2, st_bbox(box)[2] - 0.5,
+
+#label axes
+text(-1, 18, 'Longitude', srt = 90)
+text(21, -4.3, 'Latitude', srt = 00)
+
+#add ticks to axes
+points(st_bbox(box)[1] + (st_bbox(box)[3] - st_bbox(box)[1]) / 10,
+       st_bbox(box)[2] - 0.44,
        pch = '|',
-       cex = 0.8)
+       cex = 0.9)
+points((st_bbox(box)[1] + st_bbox(box)[3]) / 2,
+       st_bbox(box)[2] - 0.44,
+       pch = '|',
+       cex = 0.9)
+points(st_bbox(box)[3] - (st_bbox(box)[3] - st_bbox(box)[1]) / 10,
+       st_bbox(box)[2] - 0.44,
+       pch = '|',
+       cex = 0.9)
+
+points(st_bbox(box)[1] - 0.45,
+       st_bbox(box)[2] + (st_bbox(box)[4] - st_bbox(box)[2]) / 10,
+       pch = '—',
+       cex = 0.9)
+points(st_bbox(box)[1] - 0.45,
+       (st_bbox(box)[2] + st_bbox(box)[4]) / 2,
+       pch = '—',
+       cex = 0.9)
+points(st_bbox(box)[1] - 0.45,
+       st_bbox(box)[4] - (st_bbox(box)[4] - st_bbox(box)[2]) / 10,
+       pch = '—',
+       cex = 0.9)
+
+#add values to axes
+text(st_bbox(box)[1] + (st_bbox(box)[3] - st_bbox(box)[1]) / 10,
+       st_bbox(box)[2] - 2.4,
+     labels = paste0(round(
+         st_bbox(box)[1] + (st_bbox(box)[3] - st_bbox(box)[1]) / 10, 2)),
+     cex = 1)
+text((st_bbox(box)[1] + st_bbox(box)[3]) / 2,
+       st_bbox(box)[2] - 2.4,
+     labels = paste0(round(
+       (st_bbox(box)[1] + st_bbox(box)[3]) / 2, 2)),
+     cex = 1)
+text(st_bbox(box)[3] - (st_bbox(box)[3] - st_bbox(box)[1]) / 10,
+       st_bbox(box)[2] - 2.4,
+     labels = paste0(round(
+         st_bbox(box)[3] - (st_bbox(box)[3] - st_bbox(box)[1]) / 10, 2)),
+     cex = 1)
+
+text(st_bbox(box)[1] - 2.95,
+       st_bbox(box)[2] + (st_bbox(box)[4] - st_bbox(box)[2]) / 10,
+     labels = paste0(round(
+       st_bbox(box)[2] + (st_bbox(box)[4] - st_bbox(box)[2]) / 10, 2)),
+     cex = 1, srt = 90)
+text(st_bbox(box)[1] - 2.95,
+       (st_bbox(box)[2] + st_bbox(box)[4]) / 2,
+     labels = paste0(round(
+       (st_bbox(box)[2] + st_bbox(box)[4]) / 2, 2)),
+     cex = 1, srt = 90)
+text(st_bbox(box)[1] - 2.95,
+       st_bbox(box)[4] - (st_bbox(box)[4] - st_bbox(box)[2]) / 10,
+     labels = paste0(round(
+       st_bbox(box)[4] - (st_bbox(box)[4] - st_bbox(box)[2]) / 10, 2)),
+     cex = 1, srt = 90)
+ 
+#save plot (width = 800)
+
 
